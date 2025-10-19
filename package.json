@@ -1,0 +1,21 @@
+{
+  "name": "mood",
+  "version": "1.0.0",
+  "description": "In-place buffet management system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "buffet",
+    "cost",
+    "management",
+    "caffeteria"
+  ],
+  "author": "Mohammad Mohab",
+  "license": "ISC",
+  "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0"
+  }
+}
