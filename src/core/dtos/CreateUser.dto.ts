@@ -1,4 +1,4 @@
-import type { UserRole } from "./UserRole.type";
+import type { UserRole } from "../types/UserRole.type";
 
 export type CreateUserDto = {
   name: string;
