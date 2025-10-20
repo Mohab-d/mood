@@ -17,7 +17,7 @@ export class Order {
     this.orderItems = items;
   }
 
-  public addItemOrIncrement(item: Item): void {
+  public addItem(item: Item): void {
     const { existingOrderItem } = this.findExistingItem(item);
 
     if (!existingOrderItem) {
@@ -44,7 +44,7 @@ export class Order {
     }
   }
 
-  public findExistingItem(item: Item): {
+  private findExistingItem(item: Item): {
     existingOrderItem: OrderItem | undefined;
     index: number | undefined;
   } {
