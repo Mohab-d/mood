@@ -33,7 +33,6 @@ export class Item {
 
     if (!existingItemOption) {
       this.options.set(option.id, { option, qty: 1 });
-
       return this;
     }
 
@@ -52,7 +51,6 @@ export class Item {
     existingItemOption.qty--;
     if (existingItemOption.qty === 0) {
       this.options.delete(option.id);
-      return this;
     }
 
     return this;

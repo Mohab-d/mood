@@ -9,55 +9,38 @@ type OrderItem = {
 export class Order {
   id: string;
   createdBy: User;
-  orderItems: OrderItem[];
+  orderItems: Map<string, OrderItem>;
 
-  constructor(id: string, by: User, items: OrderItem[]) {
+  constructor(id: string, by: User, items: Map<string, OrderItem>) {
     this.id = id;
     this.createdBy = by;
     this.orderItems = items;
   }
 
-  public addItem(item: Item): void {
-    const { existingOrderItem } = this.findExistingItem(item);
+  public addItem(item: Item): this {
+    const existingItem = this.orderItems.get(item.id);
 
-    if (!existingOrderItem) {
-      this.orderItems.push({ item: item, qty: 1 });
-      return;
+    if (!existingItem) {
+      this.orderItems.set(item.id, { item, qty: 1 });
+      return this;
     }
 
-    existingOrderItem.qty++;
+    existingItem.qty++;
+    return this;
   }
 
-  public removeItem(item: Item): void {
-    const { existingOrderItem, index } = this.findExistingItem(item);
+  public removeItem(item: Item): this {
+    const existingItem = this.orderItems.get(item.id);
 
-    if (!existingOrderItem) {
-      throw new Error(
-        `Tried to decrement item qty ${item}, but it does not exist`,
-      );
+    if (!existingItem) {
+      throw new Error(`Tried to remove a non-existing item from order`);
     }
 
-    existingOrderItem.qty--;
-
-    if (existingOrderItem.qty === 0) {
-      this.orderItems.splice(index!);
+    existingItem.qty--;
+    if (existingItem.qty === 0) {
+      this.orderItems.delete(item.id);
     }
-  }
 
-  private findExistingItem(item: Item): {
-    existingOrderItem: OrderItem | undefined;
-    index: number | undefined;
-  } {
-    let index: number | undefined;
-
-    const existingOrderItem = this.orderItems.find((orderItem, index) => {
-      index = index;
-      return orderItem.item.id === item.id;
-    });
-
-    return {
-      existingOrderItem,
-      index,
-    };
+    return this;
   }
 }
