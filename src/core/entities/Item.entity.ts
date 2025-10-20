@@ -6,13 +6,13 @@ type ItemOption = {
 export class Item {
   public id: string;
   public name: string;
-  public options: ItemOption[];
+  public options: Map<string, ItemOption>;
   public isOption: boolean;
 
   constructor(
     id: string,
     name: string,
-    options: ItemOption[],
+    options: Map<string, ItemOption>,
     isOption: boolean = false,
   ) {
     this.id = id;
@@ -29,39 +29,32 @@ export class Item {
       throw new Error(`You can not add option to an option`);
     }
 
-    const { existingItemOption } = this.findExistingItemOption(option);
+    const existingItemOption = this.options.get(option.id);
 
     if (!existingItemOption) {
-      this.options.push({
-        option,
-        qty: 1,
-      });
+      this.options.set(option.id, { option, qty: 1 });
 
       return this;
     }
 
+    existingItemOption.qty++;
+
     return this;
   }
 
-  public removeOption(option: ItemOption): this {
-    this.options = this.options.filter((o) => o.id !== option.id);
+  public removeOption(option: Item): this {
+    const existingItemOption = this.options.get(option.id);
+
+    if (!existingItemOption) {
+      throw new Error(`Tried to remove a non-existing option`);
+    }
+
+    existingItemOption.qty--;
+    if (existingItemOption.qty === 0) {
+      this.options.delete(option.id);
+      return this;
+    }
+
     return this;
-  }
-
-  private findExistingItemOption(itemOption: Item): {
-    existingItemOption: ItemOption | undefined;
-    index: number | undefined;
-  } {
-    let index: number | undefined;
-
-    const existingItemOption = this.options.find((option, index) => {
-      index = index;
-      return option.option.id === itemOption.id;
-    });
-
-    return {
-      existingItemOption,
-      index,
-    };
   }
 }
