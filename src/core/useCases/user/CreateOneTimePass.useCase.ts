@@ -2,7 +2,7 @@ import { MoodConfig } from "../../config/MoodConfig";
 import { MoodEvents } from "../../events/MoodEvents.const";
 import type { INotificationService } from "../../interfaces/INotificationService.interface";
 import type { ITokenRepo } from "../../interfaces/ITokenRepo.interface";
-import { generateJWT } from "../../utilities/generateJWT";
+import { generateJWT } from "../../utilities/generateJWT.utility";
 
 export class CreateOneTimePass {
   private _tokenRepo: ITokenRepo;

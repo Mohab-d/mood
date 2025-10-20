@@ -10,5 +10,7 @@ export class CreateItem {
     this._notificationService = notificationService;
   }
 
-  public async execute(): Promise<Item> {}
+  public async execute(itemData: ): Promise<Item> {
+
+  }
 }
