@@ -8,13 +8,13 @@ type OrderItem = {
 
 export class Order {
   id: string;
-  createdBy: User;
-  orderItems: Map<string, OrderItem>;
+  placedBy: User;
+  orderItems: Map<string, OrderItem> = new Map<string, OrderItem>();
 
-  constructor(id: string, by: User, items: Map<string, OrderItem>) {
+  constructor(id: string, placedBy: User, items: Item[]) {
     this.id = id;
-    this.createdBy = by;
-    this.orderItems = items;
+    this.placedBy = placedBy;
+    items.forEach(item => this.addItem(item))
   }
 
   public addItem(item: Item): this {

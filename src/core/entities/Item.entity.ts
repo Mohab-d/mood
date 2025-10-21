@@ -6,19 +6,25 @@ type ItemOption = {
 export class Item {
   public id: string;
   public name: string;
-  public options: Map<string, ItemOption>;
+  public options: Map<string, ItemOption> = new Map<string, ItemOption>();
   public isOption: boolean;
+  public isStackable: boolean;
+  public mainItemId?: string;
 
   constructor(
     id: string,
     name: string,
-    options: Map<string, ItemOption>,
+    options: Item[],
     isOption: boolean = false,
+    isStackable: boolean = false,
+    mainItemId?: string
   ) {
     this.id = id;
     this.name = name;
-    this.options = options;
+    options.forEach(option => this.addOption(option))
     this.isOption = isOption;
+    this.isStackable = isStackable
+    this.mainItemId = mainItemId
   }
 
   public addOption(option: Item): this {
@@ -32,8 +38,10 @@ export class Item {
     const existingItemOption = this.options.get(option.id);
 
     if (!existingItemOption) {
-      this.options.set(option.id, { option, qty: 1 });
-      return this;
+      throw new Error(`This option can not be addedd to this item`)
+    }
+    if (!option.isStackable && existingItemOption.qty > 0) {
+      throw new Error(`You can only add this option once`)
     }
 
     existingItemOption.qty++;
@@ -47,11 +55,11 @@ export class Item {
     if (!existingItemOption) {
       throw new Error(`Tried to remove a non-existing option`);
     }
+    if (existingItemOption.qty === 0) {
+      throw new Error(`Tried to remove an option that is already set to 0`)
+    }
 
     existingItemOption.qty--;
-    if (existingItemOption.qty === 0) {
-      this.options.delete(option.id);
-    }
 
     return this;
   }
