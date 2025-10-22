@@ -1,16 +1,16 @@
 import { MoodConfig } from "../../config/MoodConfig";
 import { MoodEvents } from "../../events/MoodEvents.const";
-import type { INotificationService } from "../../interfaces/INotificationService.interface";
+import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import type { ITokenRepo } from "../../interfaces/ITokenRepo.interface";
 import { generateJWT } from "../../utilities/generateJWT.utility";
 
 export class CreateOneTimePass {
   private _tokenRepo: ITokenRepo;
-  private _notificationService: INotificationService;
+  private _notificationService: IMoodNotificationService;
 
   constructor(
     tokenRepo: ITokenRepo,
-    notificationService: INotificationService,
+    notificationService: IMoodNotificationService,
   ) {
     this._tokenRepo = tokenRepo;
     this._notificationService = notificationService;

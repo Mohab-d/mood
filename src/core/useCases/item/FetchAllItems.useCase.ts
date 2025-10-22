@@ -1,15 +1,18 @@
 import type { Item } from "../../entities/Item.entity";
 import { MoodEvents } from "../../events/MoodEvents.const";
 import type { IItemRepo } from "../../interfaces/IItemRepo.interface";
-import type { INotificationService } from "../../interfaces/INotificationService.interface";
+import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 
-export class GetItems {
+export class FetchAllItems {
   private _itemRepo: IItemRepo;
-  private _notificationService: INotificationService;
+  private _notificationService: IMoodNotificationService;
 
-  constructor(itemRepo: IItemRepo, notificationService: INotificationService) {
-    this._itemRepo = itemRepo
-    this._notificationService = notificationService
+  constructor(
+    itemRepo: IItemRepo,
+    notificationService: IMoodNotificationService,
+  ) {
+    this._itemRepo = itemRepo;
+    this._notificationService = notificationService;
   }
 
   public async execute(): Promise<Item[]> {
@@ -17,8 +20,8 @@ export class GetItems {
 
     this._notificationService.publish(MoodEvents.ITEM.FETCH_ALL, {
       fetcheditems,
-      message: "Fetched all items from database"
-    })
+      message: "Fetched all items from database",
+    });
 
     return fetcheditems;
   }

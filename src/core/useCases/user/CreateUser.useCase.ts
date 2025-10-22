@@ -1,7 +1,7 @@
 import { User } from "../../entities/User.entity";
 import { MoodEvents } from "../../events/MoodEvents.const";
 import type { IHasher } from "../../interfaces/IHasher.interface";
-import type { INotificationService } from "../../interfaces/INotificationService.interface";
+import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import type { IUserRepo } from "../../interfaces/IUserRepo.interface";
 import type { CreateUserDto } from "../../dtos/CreateUser.dto";
 import { createTempId } from "../../utilities/createTempId.utility";
@@ -9,12 +9,12 @@ import { createTempId } from "../../utilities/createTempId.utility";
 export class CreateUser {
   private _userRepo: IUserRepo;
   private _hasher: IHasher;
-  private _notificationService: INotificationService;
+  private _notificationService: IMoodNotificationService;
 
   constructor(
     userRepo: IUserRepo,
     hasher: IHasher,
-    notificationService: INotificationService,
+    notificationService: IMoodNotificationService,
   ) {
     this._userRepo = userRepo;
     this._hasher = hasher;

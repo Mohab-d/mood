@@ -1,2 +1,5 @@
 node_modules/
+dist/
 
+moodCopy.sh
+project_code_dump.txt

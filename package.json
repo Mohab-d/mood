@@ -1,16 +1,24 @@
 {
-  "name": "mood",
-  "version": "1.0.0",
-  "description": "In-place buffet management system",
-  "main": "index.js",
+  "name": "mood-core",
+  "version": "0.1.0",
+  "description": "Mood core",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "prepack": "npm run build"
   },
   "keywords": [
     "buffet",
     "cost",
     "management",
-    "caffeteria"
+    "caffeteria",
+    "mood",
+    "core"
   ],
   "author": "Mohammad Mohab",
   "license": "ISC",

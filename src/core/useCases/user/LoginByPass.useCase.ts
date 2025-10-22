@@ -1,21 +1,21 @@
 import { MoodEvents } from "../../events/MoodEvents.const";
-import type { INotificationService } from "../../interfaces/INotificationService.interface";
+import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import type { ITokenRepo } from "../../interfaces/ITokenRepo.interface";
 
 export class LoginByPass {
   private _tokenRepo: ITokenRepo;
-  private _notificationService: INotificationService;
+  private _notificationService: IMoodNotificationService;
 
   constructor(
     tokenRepo: ITokenRepo,
-    notificationService: INotificationService,
+    notificationService: IMoodNotificationService,
   ) {
     this._tokenRepo = tokenRepo;
     this._notificationService = notificationService;
   }
 
   public async execute(tokenId: string): Promise<string> {
-    const persistedToken = await this._tokenRepo.get(tokenId);
+    const persistedToken = await this._tokenRepo.fetch(tokenId);
 
     if (!persistedToken) {
       throw new Error(`Pass of id ${tokenId} is invalid`);
