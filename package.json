@@ -1,31 +1,22 @@
 {
-  "name": "mood-core",
-  "version": "0.1.0",
-  "description": "Mood core",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
+  "name": "mood-app-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for Mood cross-platform application (Core, NestJS Backend, React Native Frontend).",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc",
-    "prepack": "npm run build"
+    "build:all": "npm run build --workspace=@mood/core",
+    "build:core": "npm run build --workspace=@mood/core",
+    "dev:backend": "echo 'Run NestJS dev script here'",
+    "dev:frontend": "echo 'Run React Native dev script here'",
+    "install:all": "npm install"
   },
-  "keywords": [
-    "buffet",
-    "cost",
-    "management",
-    "caffeteria",
-    "mood",
-    "core"
-  ],
-  "author": "Mohammad Mohab",
-  "license": "ISC",
-  "dependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/jsonwebtoken": "^9.0.10",
-    "bcrypt": "^6.0.0",
-    "jsonwebtoken": "^9.0.2"
-  }
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2"
+  },
+  "packageManager": "npm@10.5.1"
 }

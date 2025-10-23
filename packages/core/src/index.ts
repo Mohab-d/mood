@@ -51,7 +51,7 @@ const notificationService = new MoodNotification();
 const hasher = makeBcryptHasher();
 
 // create the core
-export function mood(
+export function createMoodCore(
   itemRepo: IItemRepo,
   orderRepo: IOrderRepo,
   userRepo: IUserRepo,
@@ -93,7 +93,7 @@ export function mood(
   };
 }
 
-export default mood;
+export default createMoodCore;
 
 export type {
   Item,
