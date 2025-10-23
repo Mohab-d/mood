@@ -93,6 +93,8 @@ export function createMoodCore(
   };
 }
 
+console.log("hello from core");
+
 export default createMoodCore;
 
 export type {

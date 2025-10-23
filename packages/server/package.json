@@ -1,7 +1,7 @@
 {
-  "name": "@mood/core",
+  "name": "@mood/server",
   "version": "0.1.0",
-  "description": "Mood core",
+  "description": "Mood server",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -12,19 +12,15 @@
     "prepack": "npm run build"
   },
   "keywords": [
+    "Mood",
     "buffet",
-    "cost",
-    "management",
-    "caffeteria",
-    "mood",
-    "core"
+    "kabinet",
+    "server",
+    "backend"
   ],
   "author": "Mohammad Mohab",
   "license": "ISC",
   "dependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/jsonwebtoken": "^9.0.10",
-    "bcrypt": "^6.0.0",
-    "jsonwebtoken": "^9.0.2"
+    "@mood/core": "^0.1.0"
   }
 }

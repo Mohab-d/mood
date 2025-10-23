@@ -11,8 +11,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@mood/core": ["packages/core/src/index.ts"],
-      "@mood/core/*": ["packages/core/src/*"]
+      "@mood/core": ["packages/core/src"],
+      "@mood/server": ["packages/server/src"]
     },
 
     "strict": true,
