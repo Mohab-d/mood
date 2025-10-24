@@ -29,7 +29,7 @@ import { CreateUser } from "./useCases/user/CreateUser.useCase";
 import { LoginByPass } from "./useCases/user/LoginByPass.useCase";
 import { makeBcryptHasher } from "./utilities/makeBcryptHasher.utility";
 
-// --- MOOD'S CORE API DEFINITION ---
+// mood's core api definition
 type MoodCoreAPI = {
   items: {
     create: typeof CreateItem.prototype.execute;
@@ -92,8 +92,6 @@ export function createMoodCore(
     },
   };
 }
-
-console.log("hello from core");
 
 export default createMoodCore;
 
