@@ -2,21 +2,21 @@ import { User } from "../../entities/User.entity";
 import { MoodEvents } from "../../events/MoodEvents.const";
 import type { IHasher } from "../../interfaces/IHasher.interface";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
-import type { IUserRepo } from "../../interfaces/IUserRepo.interface";
 import type { CreateUserDto } from "../../dtos/CreateUser.dto";
 import { createTempId } from "../../utilities/createTempId.utility";
+import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 
 export class CreateUser {
-  private _userRepo: IUserRepo;
+  private _uow: IUnitOfWork;
   private _hasher: IHasher;
   private _notificationService: IMoodNotificationService;
 
   constructor(
-    userRepo: IUserRepo,
+    uow: IUnitOfWork,
     hasher: IHasher,
     notificationService: IMoodNotificationService,
   ) {
-    this._userRepo = userRepo;
+    this._uow = uow;
     this._hasher = hasher;
     this._notificationService = notificationService;
   }
@@ -33,7 +33,8 @@ export class CreateUser {
       hashedPassword,
     );
 
-    const persistedUser = await this._userRepo.saveNewUser(user);
+    const userRepo = this._uow.userRepo;
+    const persistedUser = await userRepo.saveNewUser(user);
 
     this._notificationService.publish(MoodEvents.USER.CREATED, {
       newUser: persistedUser,

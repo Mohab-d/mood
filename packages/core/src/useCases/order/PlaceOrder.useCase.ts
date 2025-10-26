@@ -2,18 +2,15 @@ import type { CreateOrderDto } from "../../dtos/CreateOrder.dto";
 import { Order } from "../../entities/Order.entity";
 import { MoodEvents } from "../../events/MoodEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
-import type { IOrderRepo } from "../../interfaces/IOrderRepo.interface";
+import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 import { createTempId } from "../../utilities/createTempId.utility";
 
 export class PlaceOrder {
-  private _orderRepo: IOrderRepo;
+  private _uow: IUnitOfWork;
   private _notificationService: IMoodNotificationService;
 
-  constructor(
-    orderRepo: IOrderRepo,
-    notificationService: IMoodNotificationService,
-  ) {
-    this._orderRepo = orderRepo;
+  constructor(uow: IUnitOfWork, notificationService: IMoodNotificationService) {
+    this._uow = uow;
     this._notificationService = notificationService;
   }
 
@@ -24,7 +21,8 @@ export class PlaceOrder {
       orderData.orderItems,
     );
 
-    const persistedOrder = await this._orderRepo.placeOrder(newOrder);
+    const orderRepo = this._uow.orderRepo;
+    const persistedOrder = await orderRepo.placeOrder(newOrder);
 
     this._notificationService.publish(MoodEvents.ORDER.CREATED, {
       newOrder: persistedOrder,

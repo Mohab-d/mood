@@ -21,28 +21,28 @@ import type { IUserRepo } from "./interfaces/IUserRepo.interface";
 // use cases
 import { CreateItem } from "./useCases/item/CreateItem.useCase";
 import { FetchAllItems } from "./useCases/item/FetchAllItems.useCase";
-import { MoodNotification } from "./useCases/notification/MoodNotification.useCase";
 import { FetchAllOrders } from "./useCases/order/FetchAllOrders.useCase";
 import { PlaceOrder } from "./useCases/order/PlaceOrder.useCase";
 import { CreateOneTimePass } from "./useCases/user/CreateOneTimePass.useCase";
 import { CreateUser } from "./useCases/user/CreateUser.useCase";
 import { LoginByPass } from "./useCases/user/LoginByPass.useCase";
+import { MoodNotification } from "./useCases/notification/MoodNotification.useCase";
 import { makeBcryptHasher } from "./utilities/makeBcryptHasher.utility";
+import { IUnitOfWork } from "./interfaces/IUnitOfWork.interface";
 
-// mood's core api definition
-type MoodCoreAPI = {
+export type MoodCoreFactories = {
   items: {
-    create: typeof CreateItem.prototype.execute;
-    fetchAll: typeof FetchAllItems.prototype.execute;
+    getCreateService: (uow: IUnitOfWork) => CreateItem;
+    getFetchAllService: (uow: IUnitOfWork) => FetchAllItems;
   };
   orders: {
-    fetchAll: typeof FetchAllOrders.prototype.execute;
-    place: typeof PlaceOrder.prototype.execute;
+    getFetchAllService: (uow: IUnitOfWork) => FetchAllOrders;
+    getPlaceService: (uow: IUnitOfWork) => PlaceOrder;
   };
   users: {
-    create: typeof CreateUser.prototype.execute;
-    createOneTimePass: typeof CreateOneTimePass.prototype.createThenGetPassId;
-    loginByPass: typeof LoginByPass.prototype.execute;
+    getCreateService: (uow: IUnitOfWork) => CreateUser;
+    getCreateOneTimePassService: (uow: IUnitOfWork) => CreateOneTimePass;
+    getLoginByPassService: (uow: IUnitOfWork) => LoginByPass;
   };
 };
 
@@ -50,59 +50,67 @@ type MoodCoreAPI = {
 const notificationService = new MoodNotification();
 const hasher = makeBcryptHasher();
 
-// create the core
-export function createMoodCore(
-  itemRepo: IItemRepo,
-  orderRepo: IOrderRepo,
-  userRepo: IUserRepo,
-  tokenRepo: ITokenRepo,
-): MoodCoreAPI {
-  const createItemUseCase = new CreateItem(itemRepo, notificationService);
-  const fetchAllItemsUseCase = new FetchAllItems(itemRepo, notificationService);
-  const fetchAllOrdersUseCase = new FetchAllOrders(
-    orderRepo,
-    notificationService,
-  );
-  const placeOrderUseCase = new PlaceOrder(orderRepo, notificationService);
-  const createOneTimePassUseCase = new CreateOneTimePass(
-    tokenRepo,
-    notificationService,
-  );
-  const createUserUseCase = new CreateUser(
-    userRepo,
-    hasher,
-    notificationService,
-  );
-  const loginPassUseCase = new LoginByPass(tokenRepo, notificationService);
+// use cases factories
+function getCreateItemService(uow: IUnitOfWork): CreateItem {
+  return new CreateItem(uow, notificationService);
+}
 
+function getFetchAllItemsService(uow: IUnitOfWork): FetchAllItems {
+  return new FetchAllItems(uow, notificationService);
+}
+
+function getFetchAllOrdersService(uow: IUnitOfWork): FetchAllOrders {
+  return new FetchAllOrders(uow, notificationService);
+}
+
+function getPlaceOrderService(uow: IUnitOfWork): PlaceOrder {
+  return new PlaceOrder(uow, notificationService);
+}
+
+function getCreateOneTimePassService(uow: IUnitOfWork): CreateOneTimePass {
+  return new CreateOneTimePass(uow, notificationService);
+}
+
+function getCreateUserService(uow: IUnitOfWork): CreateUser {
+  return new CreateUser(uow, hasher, notificationService);
+}
+
+function getLoginByPassService(uow: IUnitOfWork): LoginByPass {
+  return new LoginByPass(uow, notificationService);
+}
+
+function createMoodCoreFactories(): MoodCoreFactories {
   return {
     items: {
-      create: (params) => createItemUseCase.execute(params),
-      fetchAll: () => fetchAllItemsUseCase.execute(),
+      getCreateService: getCreateItemService,
+      getFetchAllService: getFetchAllItemsService,
     },
     orders: {
-      fetchAll: () => fetchAllOrdersUseCase.execute(),
-      place: (params) => placeOrderUseCase.execute(params),
+      getFetchAllService: getFetchAllOrdersService,
+      getPlaceService: getPlaceOrderService,
     },
     users: {
-      create: (params) => createUserUseCase.execute(params),
-      createOneTimePass: (params) =>
-        createOneTimePassUseCase.createThenGetPassId(params),
-      loginByPass: (params) => loginPassUseCase.execute(params),
+      getCreateService: getCreateUserService,
+      getCreateOneTimePassService: getCreateOneTimePassService,
+      getLoginByPassService: getLoginByPassService,
     },
   };
 }
 
-export default createMoodCore;
+export default createMoodCoreFactories;
 
 export type {
   Item,
   Order,
   User,
   MoodEventType,
-  MoodCoreAPI,
   CreateItemDto,
   CreateOrderDto,
   CreateUserDto,
   TokenDto,
+  IItemRepo,
+  IOrderRepo,
+  ITokenRepo,
+  IUserRepo,
+  IUnitOfWork,
 };

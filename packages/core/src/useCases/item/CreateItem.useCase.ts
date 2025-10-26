@@ -1,19 +1,16 @@
 import type { CreateItemDto } from "../../dtos/CreateItem.dto";
 import { Item } from "../../entities/Item.entity";
 import { MoodEvents } from "../../events/MoodEvents.const";
-import type { IItemRepo } from "../../interfaces/IItemRepo.interface";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
+import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 import { createTempId } from "../../utilities/createTempId.utility";
 
 export class CreateItem {
-  private _itemRepo: IItemRepo;
+  private _uow: IUnitOfWork;
   private _notificationService: IMoodNotificationService;
 
-  constructor(
-    itemRepo: IItemRepo,
-    notificationService: IMoodNotificationService,
-  ) {
-    this._itemRepo = itemRepo;
+  constructor(uow: IUnitOfWork, notificationService: IMoodNotificationService) {
+    this._uow = uow;
     this._notificationService = notificationService;
   }
 
@@ -27,7 +24,8 @@ export class CreateItem {
       itemData.mainItemId,
     );
 
-    const persistedItem = await this._itemRepo.save(newItem);
+    const itemRepo = this._uow.itemRepo;
+    const persistedItem = await itemRepo.save(newItem);
 
     this._notificationService.publish(MoodEvents.ITEM.CREATED, {
       newItem: persistedItem,
