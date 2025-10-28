@@ -1,5 +1,4 @@
-import { User } from '@mood/core';
-import { IUserRepo } from '@mood/core/dist/interfaces/IUserRepo.interface';
+import { IUserRepo, User } from '@mood/core';
 import { PoolClient } from 'pg';
 
 export class PgUserRepo implements IUserRepo {

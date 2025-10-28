@@ -30,74 +30,11 @@ import { MoodNotification } from "./useCases/notification/MoodNotification.useCa
 import { makeBcryptHasher } from "./utilities/makeBcryptHasher.utility";
 import { IUnitOfWork } from "./interfaces/IUnitOfWork.interface";
 
-export type MoodCoreFactories = {
-  items: {
-    getCreateService: (uow: IUnitOfWork) => CreateItem;
-    getFetchAllService: (uow: IUnitOfWork) => FetchAllItems;
-  };
-  orders: {
-    getFetchAllService: (uow: IUnitOfWork) => FetchAllOrders;
-    getPlaceService: (uow: IUnitOfWork) => PlaceOrder;
-  };
-  users: {
-    getCreateService: (uow: IUnitOfWork) => CreateUser;
-    getCreateOneTimePassService: (uow: IUnitOfWork) => CreateOneTimePass;
-    getLoginByPassService: (uow: IUnitOfWork) => LoginByPass;
-  };
-};
-
 // setup common dependencies
 const notificationService = new MoodNotification();
 const hasher = makeBcryptHasher();
 
 // use cases factories
-function getCreateItemService(uow: IUnitOfWork): CreateItem {
-  return new CreateItem(uow, notificationService);
-}
-
-function getFetchAllItemsService(uow: IUnitOfWork): FetchAllItems {
-  return new FetchAllItems(uow, notificationService);
-}
-
-function getFetchAllOrdersService(uow: IUnitOfWork): FetchAllOrders {
-  return new FetchAllOrders(uow, notificationService);
-}
-
-function getPlaceOrderService(uow: IUnitOfWork): PlaceOrder {
-  return new PlaceOrder(uow, notificationService);
-}
-
-function getCreateOneTimePassService(uow: IUnitOfWork): CreateOneTimePass {
-  return new CreateOneTimePass(uow, notificationService);
-}
-
-function getCreateUserService(uow: IUnitOfWork): CreateUser {
-  return new CreateUser(uow, hasher, notificationService);
-}
-
-function getLoginByPassService(uow: IUnitOfWork): LoginByPass {
-  return new LoginByPass(uow, notificationService);
-}
-
-function createMoodCoreFactories(): MoodCoreFactories {
-  return {
-    items: {
-      getCreateService: getCreateItemService,
-      getFetchAllService: getFetchAllItemsService,
-    },
-    orders: {
-      getFetchAllService: getFetchAllOrdersService,
-      getPlaceService: getPlaceOrderService,
-    },
-    users: {
-      getCreateService: getCreateUserService,
-      getCreateOneTimePassService: getCreateOneTimePassService,
-      getLoginByPassService: getLoginByPassService,
-    },
-  };
-}
-
-export default createMoodCoreFactories;
 
 export type {
   Item,
@@ -114,3 +51,7 @@ export type {
   IUserRepo,
   IUnitOfWork,
 };
+
+export {};
+
+// export the use cases, delete the notification and hasher, those should be created by the server

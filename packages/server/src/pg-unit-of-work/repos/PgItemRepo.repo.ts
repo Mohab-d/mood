@@ -1,5 +1,4 @@
-import { Item } from '@mood/core';
-import { IItemRepo } from '@mood/core/dist/interfaces/IItemRepo.interface';
+import { IItemRepo, Item } from '@mood/core';
 import { PoolClient } from 'pg';
 
 export class PgItemRepo implements IItemRepo {

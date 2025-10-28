@@ -1,5 +1,4 @@
-import { Order } from '@mood/core';
-import { IOrderRepo } from '@mood/core/dist/interfaces/IOrderRepo.interface';
+import { IOrderRepo, Order } from '@mood/core';
 import { PoolClient } from 'pg';
 
 export class PgOrderRepo implements IOrderRepo {
