@@ -1,4 +1,4 @@
-export const MoodEvents = {
+export const MoodCoreEvents = {
   USER: {
     CREATED: "core.user.created",
     LOGIN_BY_PASS: "core.user.login_by_pass",
@@ -24,4 +24,4 @@ type DeepValues<T> = T extends object
     : never
   : never;
 
-export type MoodEventType = DeepValues<typeof MoodEvents>;
+export type MoodCoreEventType = DeepValues<typeof MoodCoreEvents>;

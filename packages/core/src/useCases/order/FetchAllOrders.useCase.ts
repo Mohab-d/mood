@@ -1,5 +1,5 @@
 import type { Order } from "../../entities/Order.entity";
-import { MoodEvents } from "../../events/MoodEvents.const";
+import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 
@@ -16,7 +16,7 @@ export class FetchAllOrders {
     const orderRepo = this._uow.orderRepo;
     const orders = await orderRepo.fetchAllOrders();
 
-    this._notificationService.publish(MoodEvents.ORDER.FETCH_ALL, {
+    this._notificationService.publish(MoodCoreEvents.ORDER.FETCH_ALL, {
       fetchedOrders: orders,
       message: `Fetched all orders`,
     });

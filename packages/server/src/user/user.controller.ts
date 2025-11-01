@@ -1,5 +1,5 @@
 import { type CreateUserDto } from '@mood/core';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { serverConfig } from 'src/serverConfig.config';
 
@@ -26,12 +26,5 @@ export class UserController {
 
       passLink: serverConfig.baseUrl + `/login?pass=${passId}`,
     };
-  }
-
-  @Get()
-  async loginWithPass(@Query() queryParams: { passId: string }): Promise<any> {
-    const token = await this.userService.loginByPass(queryParams.passId);
-
-    return token;
   }
 }

@@ -1,5 +1,7 @@
-import type { IHasher } from "../interfaces/IHasher.interface";
-import { hash, compare } from "bcrypt";
+import { IHasher } from '@mood/core';
+import { Module } from '@nestjs/common';
+import { hash, compare } from 'bcrypt';
+import { ProviderToken } from './ProviderToken';
 
 export function makeBcryptHasher(): IHasher {
   async function hashFunc(
@@ -20,3 +22,15 @@ export function makeBcryptHasher(): IHasher {
     compare: compareFunc,
   };
 }
+
+const hasher = makeBcryptHasher();
+
+@Module({
+  providers: [
+    {
+      provide: ProviderToken.bcryptHasher,
+      useValue: hasher,
+    },
+  ],
+})
+export class HasherModule {}

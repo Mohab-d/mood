@@ -5,10 +5,14 @@ import { PgUnitOfWorkService } from './pg-unit-of-work/pg-unit-of-work.service';
 import { PgUnitOfWorkModule } from './pg-unit-of-work/pg-unit-of-work.module';
 import { UserService } from './user/user.service';
 import { UserController } from './user/user.controller';
+import { UserModule } from './user/user.module';
+import { LoginController } from './login/login.controller';
+import { LoginService } from './login/login.service';
+import { LoginModule } from './login/login.module';
 
 @Module({
-  imports: [PgUnitOfWorkModule],
-  controllers: [AppController, UserController],
-  providers: [AppService, PgUnitOfWorkService, UserService],
+  imports: [PgUnitOfWorkModule, UserModule, LoginModule],
+  controllers: [AppController, UserController, LoginController],
+  providers: [AppService, PgUnitOfWorkService, UserService, LoginService],
 })
 export class AppModule {}

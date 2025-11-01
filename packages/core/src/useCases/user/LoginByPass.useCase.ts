@@ -1,4 +1,4 @@
-import { MoodEvents } from "../../events/MoodEvents.const";
+import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 
@@ -20,7 +20,7 @@ export class LoginByPass {
 
     await this._uow.tokenRepo.delete(tokenId);
 
-    this._notificationService.publish(MoodEvents.USER.LOGIN_BY_PASS, {
+    this._notificationService.publish(MoodCoreEvents.USER.LOGIN_BY_PASS, {
       usedToken: persistedToken,
       message: "One time pass is used",
     });

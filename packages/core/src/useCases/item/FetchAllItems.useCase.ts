@@ -1,5 +1,5 @@
 import type { Item } from "../../entities/Item.entity";
-import { MoodEvents } from "../../events/MoodEvents.const";
+import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 
@@ -16,7 +16,7 @@ export class FetchAllItems {
     const itemRepo = this._uow.itemRepo;
     const fetcheditems = await itemRepo.fetchAllItems();
 
-    this._notificationService.publish(MoodEvents.ITEM.FETCH_ALL, {
+    this._notificationService.publish(MoodCoreEvents.ITEM.FETCH_ALL, {
       fetcheditems,
       message: "Fetched all items from database",
     });

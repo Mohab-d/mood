@@ -1,9 +1,9 @@
-import { type MoodEventType } from "../events/MoodEvents.const";
+import { MoodCoreEventType } from "../events/MoodCoreEvents.const";
 
 export interface IMoodNotificationService {
-  subscribe(event: MoodEventType, listener: (...args: any[]) => void): void;
+  subscribe(event: MoodCoreEventType, listener: (...args: any[]) => void): void;
   publish(
-    event: MoodEventType,
+    event: MoodCoreEventType,
     payload: { message: string; [key: string]: any },
   ): void;
 }

@@ -1,5 +1,5 @@
 import { User } from "../../entities/User.entity";
-import { MoodEvents } from "../../events/MoodEvents.const";
+import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IHasher } from "../../interfaces/IHasher.interface";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import type { CreateUserDto } from "../../dtos/CreateUser.dto";
@@ -36,7 +36,7 @@ export class CreateUser {
     const userRepo = this._uow.userRepo;
     const persistedUser = await userRepo.saveNewUser(user);
 
-    this._notificationService.publish(MoodEvents.USER.CREATED, {
+    this._notificationService.publish(MoodCoreEvents.USER.CREATED, {
       newUser: persistedUser,
       message: `New user ${persistedUser.id} created`,
     });

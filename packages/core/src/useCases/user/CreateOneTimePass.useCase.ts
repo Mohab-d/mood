@@ -1,5 +1,5 @@
 import { MoodConfig } from "../../config/MoodConfig";
-import { MoodEvents } from "../../events/MoodEvents.const";
+import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 import { generateJWT } from "../../utilities/generateJWT.utility";
@@ -20,7 +20,7 @@ export class CreateOneTimePass {
     const tokenRepo = this._uow.tokenRepo;
     const persistedToken = await tokenRepo.save(token);
 
-    this._notificationService.publish(MoodEvents.USER.LOGIN_PASS_CREATED, {
+    this._notificationService.publish(MoodCoreEvents.USER.LOGIN_PASS_CREATED, {
       tokenData: persistedToken,
       message: `One time pass created, id ${persistedToken.id}`,
     });

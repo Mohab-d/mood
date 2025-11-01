@@ -1,6 +1,6 @@
 import type { CreateItemDto } from "../../dtos/CreateItem.dto";
 import { Item } from "../../entities/Item.entity";
-import { MoodEvents } from "../../events/MoodEvents.const";
+import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 import { createTempId } from "../../utilities/createTempId.utility";
@@ -27,7 +27,7 @@ export class CreateItem {
     const itemRepo = this._uow.itemRepo;
     const persistedItem = await itemRepo.save(newItem);
 
-    this._notificationService.publish(MoodEvents.ITEM.CREATED, {
+    this._notificationService.publish(MoodCoreEvents.ITEM.CREATED, {
       newItem: persistedItem,
       message: `New item created ${persistedItem.id}`,
     });

@@ -14,4 +14,4 @@ const pgPool = new Pool({
     },
   ],
 })
-export class PgPool {}
+export class PgPoolModule {}
