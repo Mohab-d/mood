@@ -1,4 +1,6 @@
-import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
+import { MoodCoreErrorCodes } from "../../constants/MoodCoreErrorCodes.const";
+import { MoodCoreEvents } from "../../constants/MoodCoreEvents.const";
+import { MoodCoreError } from "../../entities/MoodCoreError.entity";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 
@@ -15,7 +17,10 @@ export class LoginByPass {
     const persistedToken = await this._uow.tokenRepo.fetch(tokenId);
 
     if (!persistedToken) {
-      throw new Error(`Pass of id ${tokenId} is invalid`);
+      throw new MoodCoreError(MoodCoreErrorCodes.AUTHN.INVALID_TOKEN, {
+        detailedMessage: "This token is invalid, maybe it does not exist",
+        idOfNotFoundToken: tokenId,
+      });
     }
 
     await this._uow.tokenRepo.delete(tokenId);

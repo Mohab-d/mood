@@ -1,9 +1,9 @@
 import { IMoodNotificationService, MoodCoreEventType } from '@mood/core';
+import { Injectable } from '@nestjs/common';
 import EventEmitter from 'events';
-import { ProviderToken } from './ProviderToken';
-import { Module } from '@nestjs/common';
 
-export class MoodNotificationService implements IMoodNotificationService {
+@Injectable()
+export class NotificationService implements IMoodNotificationService {
   private _eventEmitter = new EventEmitter();
 
   subscribe(
@@ -19,15 +19,3 @@ export class MoodNotificationService implements IMoodNotificationService {
     this._eventEmitter.emit(event, payload);
   }
 }
-
-const globalNotification = new MoodNotificationService();
-
-@Module({
-  providers: [
-    {
-      provide: ProviderToken.notificationService,
-      useValue: globalNotification,
-    },
-  ],
-})
-export class MoodNotificationModule {}

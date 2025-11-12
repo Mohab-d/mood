@@ -2,55 +2,81 @@ import {
   CreateOneTimePass,
   CreateUser,
   CreateUserDto,
-  type IHasher,
-  type IMoodNotificationService,
+  FetchAllUsers,
   IUnitOfWork,
   User,
 } from '@mood/core';
-import { Inject, Injectable } from '@nestjs/common';
-import { PgUnitOfWorkService } from 'src/pg-unit-of-work/pg-unit-of-work.service';
-import { ProviderToken } from 'src/providers/ProviderToken';
+import { UserRole } from '@mood/core/dist/types/UserRole.type';
+import { Injectable } from '@nestjs/common';
+import { HasherService } from 'src/shared/hasher/hasher.service';
+import { NotificationService } from 'src/shared/notification/notification.service';
+import { PgUnitOfWorkService } from 'src/shared/pg-unit-of-work/pg-unit-of-work.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly uowCoordinator: PgUnitOfWorkService,
-
-    @Inject(ProviderToken.bcryptHasher)
-    private readonly hasher: IHasher,
-
-    @Inject(ProviderToken.notificationService)
-    private readonly notifyService: IMoodNotificationService,
+    private readonly pgUnitOfWorkService: PgUnitOfWorkService,
+    private readonly hasher: HasherService,
+    private readonly notifyService: NotificationService,
   ) {}
 
-  public async creatNew(userData: CreateUserDto): Promise<User> {
-    const user = await this.uowCoordinator.runInTransaction(
+  public async createNewUserAndPass(
+    userData: CreateUserDto,
+  ): Promise<{ newUser: User; passId: string }> {
+    const { newUser, passId } = await this.pgUnitOfWorkService.runInTransaction(
       async (uow: IUnitOfWork) => {
         const createUserService = new CreateUser(
           uow,
           this.hasher,
           this.notifyService,
         );
-        const newUser = await createUserService.execute(userData);
+        const createOneTimePassService = new CreateOneTimePass(
+          uow,
+          this.notifyService,
+        );
 
-        return newUser;
+        const newUser = await createUserService.execute(userData);
+        const passId = await createOneTimePassService.createThenGetPassId({
+          id: newUser.id,
+          name: newUser.name,
+          role: newUser.role,
+        });
+
+        return { newUser, passId };
       },
     );
 
-    return user;
+    return { newUser, passId };
   }
 
-  public async createPass(payload: object): Promise<string> {
-    const passId = await this.uowCoordinator.runInTransaction(async (uow) => {
-      const oneTimePassService = new CreateOneTimePass(uow, this.notifyService);
-      return await oneTimePassService.createThenGetPassId(payload);
-    });
+  public async createPass(payload: {
+    id: string;
+    role: UserRole;
+    name: string;
+  }): Promise<string> {
+    const passId = await this.pgUnitOfWorkService.runInTransaction(
+      async (uow) => {
+        const oneTimePassService = new CreateOneTimePass(
+          uow,
+          this.notifyService,
+        );
+        return await oneTimePassService.createThenGetPassId(payload);
+      },
+    );
 
     return passId;
   }
 
   public async getAllUsers(): Promise<User[]> {
-    const users = await this.uowCoordinator.runInTransaction(async (uow) => {});
+    const users = await this.pgUnitOfWorkService.runInTransaction(
+      async (uow) => {
+        const fetchAllUsersService = new FetchAllUsers(uow, this.notifyService);
+
+        const allUsers = await fetchAllUsersService.execute();
+
+        return allUsers;
+      },
+    );
 
     return users;
   }

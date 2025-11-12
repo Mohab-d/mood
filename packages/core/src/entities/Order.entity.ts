@@ -1,4 +1,6 @@
+import { MoodCoreErrorCodes } from "../constants/MoodCoreErrorCodes.const";
 import type { Item } from "./Item.entity";
+import { MoodCoreError } from "./MoodCoreError.entity";
 import type { User } from "./User.entity";
 
 type OrderItem = {
@@ -14,7 +16,7 @@ export class Order {
   constructor(id: string, placedBy: User, items: Item[]) {
     this.id = id;
     this.placedBy = placedBy;
-    items.forEach(item => this.addItem(item))
+    items.forEach((item) => this.addItem(item));
   }
 
   public addItem(item: Item): this {
@@ -33,7 +35,10 @@ export class Order {
     const existingItem = this.orderItems.get(item.id);
 
     if (!existingItem) {
-      throw new Error(`Tried to remove a non-existing item from order`);
+      throw new MoodCoreError(MoodCoreErrorCodes.RULE.ITEM_DOES_NOT_EXIST, {
+        detailedMessage: `Tried to remove an item that does not exist in the orderItems array of order ${this.id}`,
+        itemToRemove: item,
+      });
     }
 
     existingItem.qty--;

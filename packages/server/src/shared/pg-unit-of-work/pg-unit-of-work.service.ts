@@ -1,8 +1,3 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Pool, PoolClient } from 'pg';
-import { PgItemRepo } from './repos/PgItemRepo.repo';
-import { PgOrderRepo } from './repos/PgOrderRepo.repo';
-import { PgUserRepo } from './repos/PgUserRepo.repo';
 import {
   IItemRepo,
   IOrderRepo,
@@ -10,21 +5,29 @@ import {
   IUnitOfWork,
   IUserRepo,
 } from '@mood/core';
-import { PgTokenRepo } from './repos/PgTokenRepo.repo';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Pool, PoolClient } from 'pg';
 import { IUnitOfWorkCoordinator } from 'src/interfaces/IUnitOfWorkCoordinator.interface';
+import { PgItemRepo } from './repos/PgItemRepo.repo';
+import { PgOrderRepo } from './repos/PgOrderRepo.repo';
+import { PgTokenRepo } from './repos/PgTokenRepo.repo';
+import { PgUserRepo } from './repos/PgUserRepo.repo';
 
 @Injectable()
 export class PgUnitOfWorkService implements IUnitOfWorkCoordinator {
-  private _pool: Pool;
+  private readonly pool: Pool;
 
-  constructor(@Inject('PG_POOL') pool: Pool) {
-    this._pool = pool;
+  constructor(private readonly configService: ConfigService) {
+    this.pool = new Pool({
+      connectionString: configService.get('pgConnectionString'),
+    });
   }
 
   public async runInTransaction<T>(
     work: (uow: IUnitOfWork) => Promise<T>,
   ): Promise<T> {
-    const client: PoolClient = await this._pool.connect();
+    const client: PoolClient = await this.pool.connect();
 
     try {
       await client.query('BEGIN');

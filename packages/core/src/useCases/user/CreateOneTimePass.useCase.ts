@@ -1,5 +1,5 @@
 import { MoodConfig } from "../../config/MoodConfig";
-import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
+import { MoodCoreEvents } from "../../constants/MoodCoreEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 import { generateJWT } from "../../utilities/generateJWT.utility";
@@ -7,15 +7,17 @@ import { generateJWT } from "../../utilities/generateJWT.utility";
 export class CreateOneTimePass {
   private _uow: IUnitOfWork;
   private _notificationService: IMoodNotificationService;
+  private _config: MoodConfig;
 
   constructor(uow: IUnitOfWork, notificationService: IMoodNotificationService) {
     this._uow = uow;
     this._notificationService = notificationService;
+    this._config = MoodConfig.getInstance();
   }
 
   public async createThenGetPassId(payload: object): Promise<string> {
     // utility used
-    const token = generateJWT(MoodConfig.secreteKey, payload);
+    const token = generateJWT(this._config.getProperty("secretKey"), payload);
 
     const tokenRepo = this._uow.tokenRepo;
     const persistedToken = await tokenRepo.save(token);

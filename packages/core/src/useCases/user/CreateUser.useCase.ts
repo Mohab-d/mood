@@ -1,10 +1,10 @@
 import { User } from "../../entities/User.entity";
-import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IHasher } from "../../interfaces/IHasher.interface";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import type { CreateUserDto } from "../../dtos/CreateUser.dto";
 import { createTempId } from "../../utilities/createTempId.utility";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
+import { MoodCoreEvents } from "../../constants/MoodCoreEvents.const";
 
 export class CreateUser {
   private _uow: IUnitOfWork;

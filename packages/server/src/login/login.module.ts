@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PgUnitOfWorkService } from 'src/pg-unit-of-work/pg-unit-of-work.service';
 import { LoginService } from './login.service';
 import { LoginController } from './login.controller';
+import { ConfigModule } from '@nestjs/config';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
-  imports: [PgUnitOfWorkService],
+  imports: [ConfigModule, SharedModule],
   providers: [LoginService],
   controllers: [LoginController],
 })

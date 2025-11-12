@@ -1,7 +1,8 @@
 // entities
-import type { Item } from "./entities/Item.entity";
-import type { Order } from "./entities/Order.entity";
-import type { User } from "./entities/User.entity";
+import { Item } from "./entities/Item.entity";
+import { Order } from "./entities/Order.entity";
+import { User } from "./entities/User.entity";
+import { MoodCoreError } from "./entities/MoodCoreError.entity";
 
 // dtos
 import type { CreateItemDto } from "./dtos/CreateItem.dto";
@@ -9,8 +10,9 @@ import type { CreateOrderDto } from "./dtos/CreateOrder.dto";
 import type { CreateUserDto } from "./dtos/CreateUser.dto";
 import type { TokenDto } from "./dtos/Token.dto";
 
-// events
-import { MoodCoreEventType } from "./events/MoodCoreEvents.const";
+// constants
+import { MoodCoreEventType } from "./constants/MoodCoreEvents.const";
+import { MoodCoreErrorCodes } from "./constants/MoodCoreErrorCodes.const";
 
 // repos interfaces
 import type { IHasher } from "./interfaces/IHasher.interface";
@@ -20,6 +22,7 @@ import type { IOrderRepo } from "./interfaces/IOrderRepo.interface";
 import type { ITokenRepo } from "./interfaces/ITokenRepo.interface";
 import type { IUnitOfWork } from "./interfaces/IUnitOfWork.interface";
 import type { IUserRepo } from "./interfaces/IUserRepo.interface";
+import type { IMoodCoreError } from "./interfaces/IMoodCoreError.interface";
 
 // use cases
 import { CreateItem } from "./useCases/item/CreateItem.useCase";
@@ -30,8 +33,11 @@ import { CreateOneTimePass } from "./useCases/user/CreateOneTimePass.useCase";
 import { CreateUser } from "./useCases/user/CreateUser.useCase";
 import { FetchAllUsers } from "./useCases/user/FetchAllUsers.useCase";
 import { LoginByPass } from "./useCases/user/LoginByPass.useCase";
+import { MoodConfig } from "./config/MoodConfig";
 
-// use cases factories
+// types
+import type { UserRole } from "./types/UserRole.type";
+import type { ErrorCode } from "./types/ErrorCode.type";
 
 export type {
   CreateItemDto,
@@ -41,14 +47,14 @@ export type {
   IItemRepo,
   IMoodNotificationService,
   IOrderRepo,
-  Item,
   ITokenRepo,
   IUnitOfWork,
   IUserRepo,
+  IMoodCoreError,
   MoodCoreEventType,
-  Order,
-  TokenDto,
-  User,
+  MoodCoreErrorCodes,
+  UserRole,
+  ErrorCode,
 };
 
 export {
@@ -60,4 +66,10 @@ export {
   FetchAllOrders,
   LoginByPass,
   PlaceOrder,
+  Item,
+  Order,
+  TokenDto,
+  User,
+  MoodConfig,
+  MoodCoreError,
 };

@@ -1,5 +1,5 @@
 import { sign } from "jsonwebtoken";
 
-export function generateJWT(secreteKey: string, payload: object): string {
-  return sign(payload, secreteKey);
+export function generateJWT(secretKey: string, payload: object): string {
+  return sign(payload, secretKey);
 }

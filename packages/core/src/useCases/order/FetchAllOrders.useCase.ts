@@ -1,5 +1,5 @@
+import { MoodCoreEvents } from "../../constants/MoodCoreEvents.const";
 import type { Order } from "../../entities/Order.entity";
-import { MoodCoreEvents } from "../../events/MoodCoreEvents.const";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 
