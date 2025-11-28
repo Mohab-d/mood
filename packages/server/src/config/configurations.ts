@@ -1,7 +1,9 @@
 import { MoodConfig } from '@mood/core';
 
 export default () => {
-  MoodConfig.getInstance().setProperty('secretKey', process.env.SECRET_KEY);
+  const moodConfig = MoodConfig.getInstance();
+  moodConfig.setProperty('secretKey', process.env.SECRET_KEY);
+  moodConfig.setProperty('logLevels', process.env.LOG_LEVELS?.split(',') ?? []);
 
   return {
     pgConnectionString: process.env.PG_CONNECTION_STRING!,

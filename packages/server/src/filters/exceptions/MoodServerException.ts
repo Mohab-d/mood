@@ -1,14 +1,18 @@
+import { HttpException } from '@nestjs/common';
 import { IMoodServerError } from 'src/interfaces/IMoodServerError.interface';
 import { ServerErrorCode } from 'src/types/ServerErrorCode.type';
 
-export class MoodServerError<T> extends Error implements IMoodServerError<T> {
+export class MoodServerException<T>
+  extends HttpException
+  implements IMoodServerError<T>
+{
   private _httpCode: number;
   private _code: string;
   private _context?: T | undefined;
   private _createdAt: Date;
 
   constructor(errorCode: ServerErrorCode, context?: T | undefined) {
-    super(errorCode.message);
+    super('response', errorCode.httpCode);
     this.name = 'MoodServerError';
 
     this._httpCode = errorCode.httpCode;

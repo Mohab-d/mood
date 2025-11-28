@@ -4,4 +4,5 @@ export interface IAPIErrorResponse {
   message: string;
   statusCode: number;
   details?: { field: string; error: string[] };
+  createdAt: Date;
 }

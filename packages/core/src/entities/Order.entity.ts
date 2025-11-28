@@ -1,12 +1,8 @@
 import { MoodCoreErrorCodes } from "../constants/MoodCoreErrorCodes.const";
+import { OrderItem } from "../types/OrderItem.type";
 import type { Item } from "./Item.entity";
 import { MoodCoreError } from "./MoodCoreError.entity";
 import type { User } from "./User.entity";
-
-type OrderItem = {
-  item: Item;
-  qty: number;
-};
 
 export class Order {
   id: string;

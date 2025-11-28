@@ -38,9 +38,11 @@ import { MoodConfig } from "./config/MoodConfig";
 // types
 import type { UserRole } from "./types/UserRole.type";
 import type { ErrorCode } from "./types/ErrorCode.type";
+import type { OrderItem } from "./types/OrderItem.type";
+import type { ItemOption } from "./types/ItemOption.type";
 
 export type {
-  CreateItemDto,
+  CreateItemDto as CreateItemDto,
   CreateOrderDto,
   CreateUserDto,
   IHasher,
@@ -52,9 +54,10 @@ export type {
   IUserRepo,
   IMoodCoreError,
   MoodCoreEventType,
-  MoodCoreErrorCodes,
   UserRole,
   ErrorCode,
+  OrderItem,
+  ItemOption,
 };
 
 export {
@@ -72,4 +75,5 @@ export {
   User,
   MoodConfig,
   MoodCoreError,
+  MoodCoreErrorCodes,
 };

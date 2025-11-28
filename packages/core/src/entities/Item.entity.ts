@@ -1,10 +1,6 @@
 import { MoodCoreErrorCodes } from "../constants/MoodCoreErrorCodes.const";
+import { ItemOption } from "../types/ItemOption.type";
 import { MoodCoreError } from "./MoodCoreError.entity";
-
-type ItemOption = {
-  option: Item;
-  qty: number;
-};
 
 export class Item {
   public id: string;
@@ -24,7 +20,9 @@ export class Item {
   ) {
     this.id = id;
     this.name = name;
-    options.forEach((option) => this.addOption(option));
+    options.forEach((option) =>
+      this.options.set(option.id, { option: option, qty: 0 }),
+    );
     this.isOption = isOption;
     this.isStackable = isStackable;
     this.mainItemId = mainItemId;

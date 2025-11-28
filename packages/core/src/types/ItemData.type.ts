@@ -1,6 +1,7 @@
-export type CreateItemDto = {
+export type ItemData = {
+  id: string;
   name: string;
-  optionsId: string[];
+  options: ItemData[];
   isOption?: boolean;
   isStackable?: boolean;
   mainItemId?: string;
