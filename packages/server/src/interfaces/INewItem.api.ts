@@ -1,8 +1,8 @@
 export interface INewItem {
   id: string;
   name: string;
-  options: ;
+  options: INewItem[];
   isOption: boolean;
   isStackable: boolean;
-  mainItemId: string;
+  mainItemId?: string;
 }

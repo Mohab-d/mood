@@ -8,7 +8,7 @@ export class ItemService {
   constructor(
     private readonly uowCoordinator: PgUnitOfWorkService,
     private readonly notificationService: NotificationService,
-  ) {}
+  ) { }
 
   public async saveItem(itemData: CreateItemDto): Promise<Item> {
     const newItem = await this.uowCoordinator.runInTransaction(async (uow) => {

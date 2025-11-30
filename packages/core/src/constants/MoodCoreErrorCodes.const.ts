@@ -19,7 +19,7 @@ export const MoodCoreErrorCodes = {
   RULE: {
     ITEM_DOES_NOT_EXIST: {
       code: "001.002.001",
-      message: "Tried to delete an item that does not exist",
+      message: "Tried to perform an action on an item that does not exist",
     },
     INCOMPATIBLE: {
       code: "001.002.002",

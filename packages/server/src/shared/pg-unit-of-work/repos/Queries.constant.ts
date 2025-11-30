@@ -25,4 +25,8 @@ export const Queries = {
   fetchTokenById: `
   SELECT * FROM token WHERE id = $1
 `,
+
+  fetchManyItemById: `
+  SELECT * FROM item WHERE id =
+`
 };

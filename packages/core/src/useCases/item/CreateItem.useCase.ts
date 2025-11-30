@@ -15,10 +15,12 @@ export class CreateItem {
   }
 
   public async execute(itemData: CreateItemDto): Promise<Item> {
+    const options = await this._uow.itemRepo.getManyItemById(itemData.optionsId);
+
     const newItem = new Item(
       createTempId(),
       itemData.name,
-      itemData.options,
+      options,
       itemData.isOption,
       itemData.isStackable,
       itemData.mainItemId,

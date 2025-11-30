@@ -6,7 +6,7 @@ import { ItemService } from './item.service';
 
 @Controller('item')
 export class ItemController {
-  constructor(private readonly itemService: ItemService) {}
+  constructor(private readonly itemService: ItemService) { }
 
   @Post()
   public async createItem(
@@ -17,21 +17,34 @@ export class ItemController {
     return {
       success: true,
       message: 'New Item created',
-      data: this.serializeItemRecursivly(newItem),
+      data: this.serializeItem(newItem),
       createdAt: new Date(),
     };
   }
 
-  private serializeItemRecursivly(item: Item): INewItem {
-    const itemData: INewItem = {
+  private serializeItem(item: Item): INewItem {
+    const optionIds = Object.keys(item.options);
+
+    const optionsData: INewItem[] = optionIds.map(optionId => {
+      const option = item.options.get(optionId)!.option;
+
+      return {
+        id: option.id,
+        name: option.name,
+        options: [],
+        isOption: option?.isOption,
+        isStackable: option?.isStackable,
+        mainItemId: option?.mainItemId
+      }
+    })
+
+    return {
       id: item.id,
       name: item.name,
+      options: optionsData,
       isOption: item.isOption,
       isStackable: item.isStackable,
-      mainItemId: item.mainItemId!,
-      options: item.options.,
+      mainItemId: item.mainItemId
     };
-
-    return itemData;
   }
 }
