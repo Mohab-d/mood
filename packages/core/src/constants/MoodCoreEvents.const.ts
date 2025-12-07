@@ -9,11 +9,13 @@ export const MoodCoreEvents = {
   ITEM: {
     CREATED: "core.item.created",
     FETCH_ALL: "core.item.fetch_all",
+    UPDATE: "core.item.update",
   },
 
   ORDER: {
     CREATED: "core.order.created",
     FETCH_ALL: "core.order.fetch_all",
+    COMPLETED: "core.order.completed",
   },
 } as const;
 

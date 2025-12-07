@@ -4,6 +4,7 @@ import { Order } from "../../entities/Order.entity";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 import { createTempId } from "../../utilities/createTempId.utility";
+import { makeItem } from "../../utilities/makeItem.utility";
 
 export class PlaceOrder {
   private _uow: IUnitOfWork;
@@ -15,14 +16,17 @@ export class PlaceOrder {
   }
 
   public async execute(orderData: CreateOrderDto): Promise<Order> {
-    const newOrder = new Order(
-      createTempId(),
-      orderData.placedBy,
-      orderData.orderItems,
+    const user = await this._uow.userRepo.fetchUserById(
+      orderData.placedByUserId,
     );
 
-    const orderRepo = this._uow.orderRepo;
-    const persistedOrder = await orderRepo.placeOrder(newOrder);
+    const orderItems = orderData.orderItems.map((orderItem) => ({
+      item: makeItem(orderItem.itemData),
+      qty: orderItem.qty,
+    }));
+
+    const newOrder = new Order(createTempId(), user, orderItems);
+    const persistedOrder = await this._uow.orderRepo.placeOrder(newOrder);
 
     this._notificationService.publish(MoodCoreEvents.ORDER.CREATED, {
       newOrder: persistedOrder,

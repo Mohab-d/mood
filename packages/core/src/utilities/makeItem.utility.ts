@@ -2,14 +2,17 @@ import { Item } from "../entities/Item.entity";
 import { ItemData } from "../types/ItemData.type";
 
 export function makeItem(itemData: ItemData): Item {
-  const options = itemData.options.map(optionData => new Item(
-    optionData.id,
-    optionData.name,
-    [],
-    optionData.isOption,
-    optionData.isStackable,
-    optionData.mainItemId
-  ))
+  const options = itemData.options.map(
+    (optionData) =>
+      new Item(
+        optionData.id,
+        optionData.name,
+        [],
+        optionData.isOption,
+        optionData.isStackable,
+        optionData.mainItemId,
+      ),
+  );
 
   return new Item(
     itemData.id,
@@ -17,6 +20,6 @@ export function makeItem(itemData: ItemData): Item {
     options,
     itemData.isOption,
     itemData.isStackable,
-    itemData.mainItemId
-  )
+    itemData.mainItemId,
+  );
 }

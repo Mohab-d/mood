@@ -1,16 +1,17 @@
 import { Item, type CreateItemDto } from '@mood/core';
-import { Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { IAPISuccessResponse } from 'src/interfaces/IAPISuccessResponse.api';
 import { INewItem } from 'src/interfaces/INewItem.api';
 import { ItemService } from './item.service';
+import { type ItemData } from '@mood/core/dist/types/ItemData.type';
 
 @Controller('item')
 export class ItemController {
-  constructor(private readonly itemService: ItemService) { }
+  constructor(private readonly itemService: ItemService) {}
 
   @Post()
   public async createItem(
-    itemData: CreateItemDto,
+    @Body() itemData: CreateItemDto,
   ): Promise<IAPISuccessResponse<INewItem>> {
     const newItem = await this.itemService.saveItem(itemData);
 
@@ -22,10 +23,53 @@ export class ItemController {
     };
   }
 
-  private serializeItem(item: Item): INewItem {
-    const optionIds = Object.keys(item.options);
+  @Get()
+  public async fetchAllItems(): Promise<IAPISuccessResponse<ItemData[]>> {
+    const items = await this.itemService.fetchAllItems();
 
-    const optionsData: INewItem[] = optionIds.map(optionId => {
+    return {
+      success: true,
+      message: 'Fetched all items',
+      data: items.map((item) => this.serializeItem(item)),
+      createdAt: new Date(),
+    };
+  }
+
+  @Patch()
+  public async updateItem(
+    itemData: ItemData,
+  ): Promise<IAPISuccessResponse<INewItem>> {
+    const updatedItem = await this.itemService.updateItem(itemData);
+
+    return {
+      success: true,
+      message: `Updated item ${itemData.id}`,
+      data: this.serializeItem(updatedItem),
+      createdAt: new Date(),
+    };
+  }
+
+  @Delete()
+  public async deleteItem(
+    itemId: string,
+  ): Promise<IAPISuccessResponse<undefined>> {
+    await this.itemService.deleteItem(itemId);
+
+    return {
+      success: true,
+      message: `Deleted item ${itemId}`,
+      data: undefined,
+      createdAt: new Date(),
+    };
+  }
+
+  private serializeItem(item: Item): INewItem {
+    const optionIds: string[] = [];
+    item.options.forEach((_, key) => {
+      optionIds.push(key);
+    });
+
+    const optionsData: INewItem[] = optionIds.map((optionId) => {
       const option = item.options.get(optionId)!.option;
 
       return {
@@ -34,9 +78,9 @@ export class ItemController {
         options: [],
         isOption: option?.isOption,
         isStackable: option?.isStackable,
-        mainItemId: option?.mainItemId
-      }
-    })
+        mainItemId: option?.mainItemId,
+      };
+    });
 
     return {
       id: item.id,
@@ -44,7 +88,7 @@ export class ItemController {
       options: optionsData,
       isOption: item.isOption,
       isStackable: item.isStackable,
-      mainItemId: item.mainItemId
+      mainItemId: item.mainItemId,
     };
   }
 }

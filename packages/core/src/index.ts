@@ -27,6 +27,7 @@ import type { IMoodCoreError } from "./interfaces/IMoodCoreError.interface";
 // use cases
 import { CreateItem } from "./useCases/item/CreateItem.useCase";
 import { FetchAllItems } from "./useCases/item/FetchAllItems.useCase";
+import { UpdateItem } from "./useCases/item/UpdateItem.useCase";
 import { FetchAllOrders } from "./useCases/order/FetchAllOrders.useCase";
 import { PlaceOrder } from "./useCases/order/PlaceOrder.useCase";
 import { CreateOneTimePass } from "./useCases/user/CreateOneTimePass.useCase";
@@ -40,6 +41,9 @@ import type { UserRole } from "./types/UserRole.type";
 import type { ErrorCode } from "./types/ErrorCode.type";
 import type { OrderItem } from "./types/OrderItem.type";
 import type { ItemOption } from "./types/ItemOption.type";
+
+// utilities
+import { makeItem } from "./utilities/makeItem.utility";
 
 export type {
   CreateItemDto as CreateItemDto,
@@ -66,6 +70,7 @@ export {
   CreateUser,
   FetchAllUsers,
   FetchAllItems,
+  UpdateItem,
   FetchAllOrders,
   LoginByPass,
   PlaceOrder,
@@ -76,4 +81,5 @@ export {
   MoodConfig,
   MoodCoreError,
   MoodCoreErrorCodes,
+  makeItem,
 };

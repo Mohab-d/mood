@@ -1,4 +1,4 @@
-import { User, type CreateUserDto } from '@mood/core';
+import { type CreateUserDto } from '@mood/core';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';

@@ -10,6 +10,9 @@ export class Item {
   public isStackable: boolean;
   public mainItemId?: string;
 
+  public isAvailable?: boolean;
+  public availableQty?: number;
+
   constructor(
     id: string,
     name: string,
@@ -20,9 +23,16 @@ export class Item {
   ) {
     this.id = id;
     this.name = name;
-    options.forEach((option) =>
-      this.options.set(option.id, { option: option, qty: 0 }),
-    );
+    options.forEach((option) => {
+      if (!option.isOption) {
+        throw new MoodCoreError(MoodCoreErrorCodes.RULE.INCOMPATIBLE, {
+          detailedMessagee: "You can not add a non-option item as an option",
+          nonOptionItem: option,
+        });
+      }
+
+      this.options.set(option.id, { option: option, qty: 0 });
+    });
     this.isOption = isOption;
     this.isStackable = isStackable;
     this.mainItemId = mainItemId;

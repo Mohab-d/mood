@@ -9,17 +9,17 @@ export class Order {
   placedBy: User;
   orderItems: Map<string, OrderItem> = new Map<string, OrderItem>();
 
-  constructor(id: string, placedBy: User, items: Item[]) {
+  constructor(id: string, placedBy: User, orderItems: OrderItem[]) {
     this.id = id;
     this.placedBy = placedBy;
-    items.forEach((item) => this.addItem(item));
+    orderItems.forEach((orderItem) => this.addItem(orderItem.item, 0));
   }
 
-  public addItem(item: Item): this {
+  public addItem(item: Item, qty: number): this {
     const existingItem = this.orderItems.get(item.id);
 
     if (!existingItem) {
-      this.orderItems.set(item.id, { item, qty: 1 });
+      this.orderItems.set(item.id, { item, qty: qty });
       return this;
     }
 

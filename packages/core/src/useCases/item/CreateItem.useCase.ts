@@ -15,7 +15,9 @@ export class CreateItem {
   }
 
   public async execute(itemData: CreateItemDto): Promise<Item> {
-    const options = await this._uow.itemRepo.getManyItemById(itemData.optionsId);
+    const options = await this._uow.itemRepo.fetchManyOptionById(
+      itemData.optionsId,
+    );
 
     const newItem = new Item(
       createTempId(),
