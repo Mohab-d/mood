@@ -46,4 +46,12 @@ export const MoodCoreErrorCodes = {
       message: "Invalid token or expired, maybe it has already been used",
     },
   },
+
+  // ---- CATEGORY: BUSINESS: 004
+  BUSINESS: {
+    INSUFFICIENT_MATERIAL: {
+      code: "001.004.001",
+      message: "Available qty is not sufficient to complete operation",
+    },
+  },
 } as const;

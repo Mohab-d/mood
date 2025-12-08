@@ -10,8 +10,8 @@ export class Item {
   public isStackable: boolean;
   public mainItemId?: string;
 
-  public isAvailable?: boolean;
-  public availableQty?: number;
+  public isAvailable: boolean;
+  public availableQty: number = 0;
 
   constructor(
     id: string,
@@ -20,9 +20,12 @@ export class Item {
     isOption: boolean = false,
     isStackable: boolean = false,
     mainItemId?: string,
+    isAvailable?: boolean,
+    availableQty?: number,
   ) {
     this.id = id;
     this.name = name;
+
     options.forEach((option) => {
       if (!option.isOption) {
         throw new MoodCoreError(MoodCoreErrorCodes.RULE.INCOMPATIBLE, {
@@ -33,9 +36,12 @@ export class Item {
 
       this.options.set(option.id, { option: option, qty: 0 });
     });
+
     this.isOption = isOption;
     this.isStackable = isStackable;
     this.mainItemId = mainItemId;
+    this.isAvailable = !isAvailable ? false : isAvailable;
+    this.availableQty = availableQty ?? 0;
   }
 
   public addOption(option: Item): this {
@@ -45,6 +51,7 @@ export class Item {
         nonOptionItem: option,
       });
     }
+
     if (this.isOption) {
       throw new MoodCoreError(MoodCoreErrorCodes.RULE.NESTGIN_NOT_ALLOWED, {
         detailedMessage: "You can not nest options under other options",
@@ -61,6 +68,7 @@ export class Item {
         option: option,
       });
     }
+
     if (!option.isStackable && existingItemOption.qty > 0) {
       throw new MoodCoreError(MoodCoreErrorCodes.RULE.MAX_LIMIT, {
         dtailedMessage: "You can only add this option once",
@@ -95,5 +103,31 @@ export class Item {
     existingItemOption.qty--;
 
     return this;
+  }
+
+  public updateAvailably(isAvailable: boolean): void {
+    this.isAvailable = isAvailable;
+  }
+
+  public consume(qty: number): void {
+    const newQty = this.availableQty - qty;
+
+    if (newQty < 0) {
+      throw new MoodCoreError(
+        MoodCoreErrorCodes.BUSINESS.INSUFFICIENT_MATERIAL,
+        {
+          detailedMessage:
+            "Available qty is not sufficient to fulfill this order",
+          item: this,
+          requiredQty: qty,
+        },
+      );
+    }
+
+    this.availableQty = newQty;
+  }
+
+  public forceConsume(qty: number): void {
+    this.availableQty -= qty;
   }
 }
