@@ -44,4 +44,47 @@ export class Order {
 
     return this;
   }
+
+  public consumeOrder(): Item[] {
+    const insufficientItems: Item[] = [];
+
+    this.orderItems.forEach(function checkAvailability(orderItem) {
+      const item = orderItem.item;
+      const qtyAfterConsumption = item.availableQty - orderItem.qty;
+
+      if (!(qtyAfterConsumption > 0)) {
+        insufficientItems.push(item);
+      }
+    });
+
+    if (insufficientItems.length > 0) {
+      throw new MoodCoreError(
+        MoodCoreErrorCodes.BUSINESS.INSUFFICIENT_MATERIAL,
+        {
+          detailedMessage:
+            "Available qty is insufficient to fulfill this order",
+          insufficientItems,
+          order: this,
+        },
+      );
+    }
+
+    const consumedItems: Item[] = [];
+    this.orderItems.forEach(function applyConsumption(orderItem) {
+      orderItem.item.forceConsume(orderItem.qty);
+      consumedItems.push(orderItem.item);
+    });
+
+    return consumedItems;
+  }
+
+  public forceConsumeOrder(): Item[] {
+    const consumedItems: Item[] = [];
+    this.orderItems.forEach(function applyConsumption(orderItem) {
+      orderItem.item.forceConsume(orderItem.qty);
+      consumedItems.push(orderItem.item);
+    });
+
+    return consumedItems;
+  }
 }

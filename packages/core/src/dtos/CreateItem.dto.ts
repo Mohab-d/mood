@@ -4,4 +4,6 @@ export type CreateItemDto = {
   isOption?: boolean;
   isStackable?: boolean;
   mainItemId?: string;
+  isAvailable?: boolean;
+  availableQty?: number;
 };

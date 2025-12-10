@@ -26,6 +26,8 @@ export class PlaceOrder {
     }));
 
     const newOrder = new Order(createTempId(), user, orderItems);
+    const consumedItems = newOrder.consumeOrder();
+
     const persistedOrder = await this._uow.orderRepo.placeOrder(newOrder);
 
     this._notificationService.publish(MoodCoreEvents.ORDER.CREATED, {

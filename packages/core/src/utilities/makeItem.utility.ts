@@ -11,6 +11,8 @@ export function makeItem(itemData: ItemData): Item {
         optionData.isOption,
         optionData.isStackable,
         optionData.mainItemId,
+        optionData.isAvilable,
+        optionData.avilableQty,
       ),
   );
 
@@ -21,5 +23,7 @@ export function makeItem(itemData: ItemData): Item {
     itemData.isOption,
     itemData.isStackable,
     itemData.mainItemId,
+    itemData.isAvilable,
+    itemData.avilableQty,
   );
 }

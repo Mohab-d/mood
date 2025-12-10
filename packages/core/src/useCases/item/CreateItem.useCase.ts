@@ -26,6 +26,8 @@ export class CreateItem {
       itemData.isOption,
       itemData.isStackable,
       itemData.mainItemId,
+      itemData.isAvailable,
+      itemData.availableQty,
     );
 
     const itemRepo = this._uow.itemRepo;

@@ -5,4 +5,6 @@ export type ItemData = {
   isOption?: boolean;
   isStackable?: boolean;
   mainItemId?: string;
+  isAvilable?: boolean;
+  avilableQty?: number;
 };

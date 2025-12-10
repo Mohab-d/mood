@@ -116,8 +116,7 @@ export class Item {
       throw new MoodCoreError(
         MoodCoreErrorCodes.BUSINESS.INSUFFICIENT_MATERIAL,
         {
-          detailedMessage:
-            "Available qty is not sufficient to fulfill this order",
+          detailedMessage: "Available quantity is insufficient",
           item: this,
           requiredQty: qty,
         },
