@@ -3,6 +3,7 @@ import { Item } from "../../entities/Item.entity";
 import { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 import { ItemData } from "../../types/ItemData.type";
+import { makeItem } from "../../utilities/makeItem.utility";
 
 export class UpdateItem {
   private _uow: IUnitOfWork;
@@ -14,7 +15,9 @@ export class UpdateItem {
   }
 
   public async execute(itemData: ItemData): Promise<Item> {
-    const updatedItem = await this._uow.itemRepo.updateItem(itemData);
+    const item = makeItem(itemData);
+
+    const updatedItem = await this._uow.itemRepo.updateItem(item);
 
     this._notificationService.publish(MoodCoreEvents.ITEM.UPDATE, {
       message: `Updated item ${itemData.id}`,

@@ -1,5 +1,8 @@
+import { MoodConfig } from "../../config/MoodConfig";
+import { MoodCoreConfigs } from "../../constants/MoodCoreConfigs.const";
 import { MoodCoreEvents } from "../../constants/MoodCoreEvents.const";
 import type { CreateOrderDto } from "../../dtos/CreateOrder.dto";
+import { Item } from "../../entities/Item.entity";
 import { Order } from "../../entities/Order.entity";
 import type { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
@@ -26,13 +29,29 @@ export class PlaceOrder {
     }));
 
     const newOrder = new Order(createTempId(), user, orderItems);
-    const consumedItems = newOrder.consumeOrder();
+    let consumedItems: Item[] = [];
+
+    if (
+      !MoodConfig.getInstance().getProperty(
+        MoodCoreConfigs.ALLOW_NEGATIVE_STOCK,
+      )
+    ) {
+      consumedItems = newOrder.consumeOrder();
+    } else {
+      consumedItems = newOrder.forceConsumeOrder();
+    }
 
     const persistedOrder = await this._uow.orderRepo.placeOrder(newOrder);
+    await this._uow.itemRepo.consumeItems(consumedItems);
 
     this._notificationService.publish(MoodCoreEvents.ORDER.CREATED, {
       newOrder: persistedOrder,
       message: `Placed new order ${persistedOrder.id}`,
+    });
+
+    this._notificationService.publish(MoodCoreEvents.ITEM.CONSUMED, {
+      message: `Consumed items of order ${persistedOrder.id}`,
+      consumedItems,
     });
 
     return persistedOrder;

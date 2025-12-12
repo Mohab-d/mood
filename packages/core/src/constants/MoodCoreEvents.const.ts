@@ -9,7 +9,8 @@ export const MoodCoreEvents = {
   ITEM: {
     CREATED: "core.item.created",
     FETCH_ALL: "core.item.fetch_all",
-    UPDATE: "core.item.update",
+    UPDATE: "core.item.updated",
+    CONSUMED: "core.item.consumed",
     REORDER_LIMI_REACHED: "core.item.reorder_limit_reached",
   },
 
