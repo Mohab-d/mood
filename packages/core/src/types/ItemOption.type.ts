@@ -1,6 +1,6 @@
-import { Item } from "../entities/Item.entity";
+import { Option } from "../entities/Option.entity";
 
 export type ItemOption = {
-  option: Item;
+  option: Option;
   qty: number;
 };

@@ -1,14 +1,12 @@
 import { MoodCoreErrorCodes } from "../constants/MoodCoreErrorCodes.const";
 import { ItemOption } from "../types/ItemOption.type";
 import { MoodCoreError } from "./MoodCoreError.entity";
+import { Option } from "./Option.entity";
 
 export class Item {
   public id: string;
   public name: string;
   public options: Map<string, ItemOption> = new Map<string, ItemOption>();
-  public isOption: boolean;
-  public isStackable: boolean;
-  public mainItemId?: string;
 
   public isAvailable: boolean;
   public availableQty: number = 0;
@@ -16,10 +14,7 @@ export class Item {
   constructor(
     id: string,
     name: string,
-    options: Item[],
-    isOption: boolean = false,
-    isStackable: boolean = false,
-    mainItemId?: string,
+    options: Option[],
     isAvailable?: boolean,
     availableQty?: number,
   ) {
@@ -27,38 +22,25 @@ export class Item {
     this.name = name;
 
     options.forEach((option) => {
-      if (!option.isOption) {
-        throw new MoodCoreError(MoodCoreErrorCodes.RULE.INCOMPATIBLE, {
-          detailedMessagee: "You can not add a non-option item as an option",
-          nonOptionItem: option,
-        });
-      }
-
       this.options.set(option.id, { option: option, qty: 0 });
     });
 
-    this.isOption = isOption;
-    this.isStackable = isStackable;
-    this.mainItemId = mainItemId;
     this.isAvailable = !isAvailable ? false : isAvailable;
     this.availableQty = availableQty ?? 0;
   }
 
-  public addOption(option: Item): this {
-    if (!option.isOption) {
-      throw new MoodCoreError(MoodCoreErrorCodes.RULE.INCOMPATIBLE, {
-        detailedMessage: "This item is not an option, so it can not be added",
-        nonOptionItem: option,
-      });
+  public assignOption(option: Option): this {
+    const existingItemOption = this.options.get(option.id);
+
+    if (existingItemOption) {
+      return this;
     }
 
-    if (this.isOption) {
-      throw new MoodCoreError(MoodCoreErrorCodes.RULE.NESTGIN_NOT_ALLOWED, {
-        detailedMessage: "You can not nest options under other options",
-        optionToAdd: option,
-      });
-    }
+    this.options.set(option.id, { option, qty: 0 });
+    return this;
+  }
 
+  public addOption(option: Option): this {
     const existingItemOption = this.options.get(option.id);
 
     if (!existingItemOption) {
@@ -84,20 +66,8 @@ export class Item {
   public removeOption(option: Item): this {
     const existingItemOption = this.options.get(option.id);
 
-    if (!existingItemOption) {
-      throw new MoodCoreError(MoodCoreErrorCodes.RULE.ITEM_DOES_NOT_EXIST, {
-        detailedMessage:
-          "Option is not allowed in this item, and does not exist in the options list, but the user tried to delete it",
-        optionToDelete: option,
-        allowedOptions: this.options,
-      });
-    }
-    if (existingItemOption.qty === 0) {
-      throw new MoodCoreError(MoodCoreErrorCodes.RULE.NEGATIVE_NOT_ALLOWED, {
-        detailedMessage:
-          "This option is already set to zero, yet the user tried to decrement it",
-        option: option,
-      });
+    if (!existingItemOption || existingItemOption.qty === 0) {
+      return this;
     }
 
     existingItemOption.qty--;
@@ -109,24 +79,15 @@ export class Item {
     this.isAvailable = isAvailable;
   }
 
-  public consume(qty: number): void {
-    const newQty = this.availableQty - qty;
-
-    if (newQty < 0) {
-      throw new MoodCoreError(
-        MoodCoreErrorCodes.BUSINESS.INSUFFICIENT_MATERIAL,
-        {
-          detailedMessage: "Available quantity is insufficient",
-          item: this,
-          requiredQty: qty,
-        },
-      );
-    }
-
-    this.availableQty = newQty;
+  public make(itemQty: number): void {
+    this.options.forEach(({ option, qty }) => {
+      option.consume(qty * itemQty);
+    });
   }
 
-  public forceConsume(qty: number): void {
-    this.availableQty -= qty;
+  public forceMake(itemQty: number): void {
+    this.options.forEach(({ option, qty }) => {
+      option.forceConsume(qty * itemQty);
+    });
   }
 }

@@ -17,9 +17,9 @@ export const MoodCoreErrorCodes = {
 
   // ---- CATEGORY: RULES: 002
   RULE: {
-    ITEM_DOES_NOT_EXIST: {
+    OPTION_DOES_NOT_EXIST: {
       code: "001.002.001",
-      message: "Tried to perform an action on an item that does not exist",
+      message: "Tried to perform an action on an option that does not exist",
     },
     INCOMPATIBLE: {
       code: "001.002.002",

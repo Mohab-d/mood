@@ -71,7 +71,7 @@ export class Order {
 
     const consumedItems: Item[] = [];
     this.orderItems.forEach(function applyConsumption(orderItem) {
-      orderItem.item.forceConsume(orderItem.qty);
+      orderItem.item.forceMake(orderItem.qty);
       consumedItems.push(orderItem.item);
     });
 
@@ -81,7 +81,7 @@ export class Order {
   public forceConsumeOrder(): Item[] {
     const consumedItems: Item[] = [];
     this.orderItems.forEach(function applyConsumption(orderItem) {
-      orderItem.item.forceConsume(orderItem.qty);
+      orderItem.item.forceMake(orderItem.qty);
       consumedItems.push(orderItem.item);
     });
 
