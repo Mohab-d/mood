@@ -1,23 +1,29 @@
 export const MoodCoreEvents = {
   USER: {
-    CREATED: "core.user.created",
+    CREATE: "core.user.created",
     LOGIN_BY_PASS: "core.user.login_by_pass",
     LOGIN_PASS_CREATED: "core.user.login_pass_created",
     FETCH_ALL: "core.user.fetch_all",
   },
 
   ITEM: {
-    CREATED: "core.item.created",
+    CREATE: "core.item.created",
     FETCH_ALL: "core.item.fetch_all",
     UPDATE: "core.item.updated",
-    CONSUMED: "core.item.consumed",
+    CONSUME: "core.item.consumed",
     REORDER_LIMI_REACHED: "core.item.reorder_limit_reached",
   },
 
+  OPTION: {
+    CREATE: "core.option.created",
+    UPDATE: "core.option.updated",
+    FETCH: "core.option.fetch",
+  },
+
   ORDER: {
-    CREATED: "core.order.created",
+    CREATE: "core.order.created",
     FETCH_ALL: "core.order.fetch_all",
-    COMPLETED: "core.order.completed",
+    COMPLETE: "core.order.completed",
   },
 } as const;
 

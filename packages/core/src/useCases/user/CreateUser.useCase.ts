@@ -36,7 +36,7 @@ export class CreateUser {
     const userRepo = this._uow.userRepo;
     const persistedUser = await userRepo.saveNewUser(user);
 
-    this._notificationService.publish(MoodCoreEvents.USER.CREATED, {
+    this._notificationService.publish(MoodCoreEvents.USER.CREATE, {
       newUser: persistedUser,
       message: `New user ${persistedUser.id} created`,
     });

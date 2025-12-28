@@ -1,7 +1,5 @@
-import { MoodCoreErrorCodes } from "../constants/MoodCoreErrorCodes.const";
 import { OrderItem } from "../types/OrderItem.type";
 import type { Item } from "./Item.entity";
-import { MoodCoreError } from "./MoodCoreError.entity";
 import type { User } from "./User.entity";
 
 export class Order {
@@ -31,10 +29,7 @@ export class Order {
     const existingItem = this.orderItems.get(item.id);
 
     if (!existingItem) {
-      throw new MoodCoreError(MoodCoreErrorCodes.RULE.ITEM_DOES_NOT_EXIST, {
-        detailedMessage: `Tried to remove an item that does not exist in the orderItems array of order ${this.id}`,
-        itemToRemove: item,
-      });
+      return this;
     }
 
     existingItem.qty--;
@@ -46,36 +41,14 @@ export class Order {
   }
 
   public consumeOrder(): Item[] {
-    const insufficientItems: Item[] = [];
+    const preparedItems: Item[] = [];
 
-    this.orderItems.forEach(function checkAvailability(orderItem) {
-      const item = orderItem.item;
-      const qtyAfterConsumption = item.availableQty - orderItem.qty;
-
-      if (!(qtyAfterConsumption > 0)) {
-        insufficientItems.push(item);
-      }
+    this.orderItems.forEach(({ item, qty }) => {
+      item.make(qty);
+      preparedItems.push(item);
     });
 
-    if (insufficientItems.length > 0) {
-      throw new MoodCoreError(
-        MoodCoreErrorCodes.BUSINESS.INSUFFICIENT_MATERIAL,
-        {
-          detailedMessage:
-            "Available qty is insufficient to fulfill this order",
-          insufficientItems,
-          order: this,
-        },
-      );
-    }
-
-    const consumedItems: Item[] = [];
-    this.orderItems.forEach(function applyConsumption(orderItem) {
-      orderItem.item.forceMake(orderItem.qty);
-      consumedItems.push(orderItem.item);
-    });
-
-    return consumedItems;
+    return preparedItems;
   }
 
   public forceConsumeOrder(): Item[] {

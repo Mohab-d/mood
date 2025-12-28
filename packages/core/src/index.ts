@@ -44,6 +44,16 @@ import type { ItemOption } from "./types/ItemOption.type";
 
 // utilities
 import { makeItem } from "./utilities/makeItem.utility";
+import { MoodCoreConfigs } from "./constants/MoodCoreConfigs.const";
+import { MoodCoreRolesActions } from "./constants/MoodCoreAction.const";
+
+function mood() {
+  const configs = MoodConfig.getInstance();
+
+  configs.setProperty(MoodCoreConfigs.ROLE_PERMISSION, {
+    ...MoodCoreRolesActions,
+  });
+}
 
 export type {
   CreateItemDto as CreateItemDto,

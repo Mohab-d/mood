@@ -15,7 +15,7 @@ export class CreateItem {
   }
 
   public async execute(itemData: CreateItemDto): Promise<Item> {
-    const options = await this._uow.itemRepo.fetchManyOptionById(
+    const options = await this._uow.optionRepo.fetchManyOptionById(
       itemData.optionsId,
     );
 
@@ -23,9 +23,6 @@ export class CreateItem {
       createTempId(),
       itemData.name,
       options,
-      itemData.isOption,
-      itemData.isStackable,
-      itemData.mainItemId,
       itemData.isAvailable,
       itemData.availableQty,
     );
@@ -33,7 +30,7 @@ export class CreateItem {
     const itemRepo = this._uow.itemRepo;
     const persistedItem = await itemRepo.save(newItem);
 
-    this._notificationService.publish(MoodCoreEvents.ITEM.CREATED, {
+    this._notificationService.publish(MoodCoreEvents.ITEM.CREATE, {
       newItem: persistedItem,
       message: `New item created ${persistedItem.id}`,
     });

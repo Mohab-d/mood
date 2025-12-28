@@ -12,10 +12,12 @@ import { makeItem } from "../../utilities/makeItem.utility";
 export class PlaceOrder {
   private _uow: IUnitOfWork;
   private _notificationService: IMoodNotificationService;
+  private _config: MoodConfig;
 
   constructor(uow: IUnitOfWork, notificationService: IMoodNotificationService) {
     this._uow = uow;
     this._notificationService = notificationService;
+    this._config = MoodConfig.getInstance();
   }
 
   public async execute(orderData: CreateOrderDto): Promise<Order> {
@@ -31,11 +33,10 @@ export class PlaceOrder {
     const newOrder = new Order(createTempId(), user, orderItems);
     let consumedItems: Item[] = [];
 
-    if (
-      !MoodConfig.getInstance().getProperty(
-        MoodCoreConfigs.ALLOW_NEGATIVE_STOCK,
-      )
-    ) {
+    const allowNegativeStock = this._config.getProperty(
+      MoodCoreConfigs.ALLOW_NEGATIVE_STOCK,
+    );
+    if (!allowNegativeStock) {
       consumedItems = newOrder.consumeOrder();
     } else {
       consumedItems = newOrder.forceConsumeOrder();
@@ -44,12 +45,12 @@ export class PlaceOrder {
     const persistedOrder = await this._uow.orderRepo.placeOrder(newOrder);
     await this._uow.itemRepo.consumeItems(consumedItems);
 
-    this._notificationService.publish(MoodCoreEvents.ORDER.CREATED, {
+    this._notificationService.publish(MoodCoreEvents.ORDER.CREATE, {
       newOrder: persistedOrder,
       message: `Placed new order ${persistedOrder.id}`,
     });
 
-    this._notificationService.publish(MoodCoreEvents.ITEM.CONSUMED, {
+    this._notificationService.publish(MoodCoreEvents.ITEM.CONSUME, {
       message: `Consumed items of order ${persistedOrder.id}`,
       consumedItems,
     });

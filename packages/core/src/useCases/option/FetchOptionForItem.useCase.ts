@@ -1,8 +1,9 @@
 import { MoodCoreEvents } from "../../constants/MoodCoreEvents.const";
+import { Option } from "../../entities/Option.entity";
 import { IMoodNotificationService } from "../../interfaces/IMoodNotificationService.interface";
 import { IUnitOfWork } from "../../interfaces/IUnitOfWork.interface";
 
-export class CompleteOrder {
+export class FetchOptionForItem {
   private _uow: IUnitOfWork;
   private _notificationService: IMoodNotificationService;
 
@@ -11,12 +12,14 @@ export class CompleteOrder {
     this._notificationService = notificationService;
   }
 
-  public async execute(orderId: string): Promise<void> {
-    await this._uow.orderRepo.markAsComplete(orderId);
+  public async execute(itemId: string): Promise<Option[]> {
+    const options = await this._uow.optionRepo.fetchForItemId(itemId);
 
-    this._notificationService.publish(MoodCoreEvents.ORDER.COMPLETE, {
-      message: `Completed order ${orderId}`,
-      orderId,
+    this._notificationService.publish(MoodCoreEvents.OPTION.FETCH, {
+      message: `Fetched options for item ${itemId}`,
+      options,
     });
+
+    return options;
   }
 }

@@ -1,10 +1,9 @@
+import { OptionData } from "./OptionData.type";
+
 export type ItemData = {
   id: string;
   name: string;
-  options: ItemData[];
-  isOption?: boolean;
-  isStackable?: boolean;
-  mainItemId?: string;
-  isAvilable?: boolean;
+  options: OptionData[];
+  isAvailable?: boolean;
   avilableQty?: number;
 };

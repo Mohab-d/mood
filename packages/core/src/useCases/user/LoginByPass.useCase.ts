@@ -23,7 +23,7 @@ export class LoginByPass {
       });
     }
 
-    await this._uow.tokenRepo.delete(tokenId);
+    const tokenPayload = await this._uow.tokenRepo.markAsUsed(tokenId);
 
     this._notificationService.publish(MoodCoreEvents.USER.LOGIN_BY_PASS, {
       usedToken: persistedToken,

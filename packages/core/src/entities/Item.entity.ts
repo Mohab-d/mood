@@ -79,10 +79,38 @@ export class Item {
     this.isAvailable = isAvailable;
   }
 
-  public make(itemQty: number): void {
-    this.options.forEach(({ option, qty }) => {
-      option.consume(qty * itemQty);
+  public make(itemQty: number): Option[] {
+    const insufficientOptions: Option[] = [];
+
+    this.options.forEach(function checkAvailability({ option, qty }) {
+      const requiredQty = qty * itemQty;
+      const qtyAfterConsumption = option.availableQty - requiredQty;
+
+      if (!(qtyAfterConsumption > 0)) {
+        insufficientOptions.push(option);
+      }
     });
+
+    if (insufficientOptions.length > 0) {
+      throw new MoodCoreError(
+        MoodCoreErrorCodes.BUSINESS.INSUFFICIENT_MATERIAL,
+        {
+          detailedMessage:
+            "Available qty is insufficient to make the required qty",
+          insufficientItems: insufficientOptions,
+          order: this,
+        },
+      );
+    }
+
+    const consumedOptions: Option[] = [];
+    this.options.forEach(function applyConsumption({ option, qty }) {
+      const requiredQty = qty * itemQty;
+      option.forceConsume(requiredQty);
+      consumedOptions.push(option);
+    });
+
+    return consumedOptions;
   }
 
   public forceMake(itemQty: number): void {
