@@ -47,20 +47,17 @@ import { makeItem } from "./utilities/makeItem.utility";
 import { MoodCoreConfigs } from "./constants/MoodCoreConfigs.const";
 import { IAuthorizer } from "./interfaces/IAuthorizer.interface";
 
-function mood<K extends keyof MoodCoreConfigs>(
+function mood(
   config: MoodCoreConfigs,
   authorizer?: IAuthorizer,
   ns?: IMoodNotificationService,
 ) {
   const configs = MoodConfig.getInstance();
-
-  return {
-    configs,
-  };
+  configs.init(config);
 }
 
 export type {
-  CreateItemDto as CreateItemDto,
+  CreateItemDto,
   CreateOrderDto,
   CreateUserDto,
   IHasher,
@@ -78,22 +75,22 @@ export type {
   ItemOption,
 };
 
-export {
-  CreateItem,
-  CreateOneTimePass,
-  CreateUser,
-  FetchAllUsers,
-  FetchAllItems,
-  UpdateItem,
-  FetchAllOrders,
-  LoginByPass,
-  PlaceOrder,
-  Item,
-  Order,
-  TokenDto,
-  User,
-  MoodConfig,
-  MoodCoreError,
-  MoodCoreErrorCodes,
-  makeItem,
-};
+// export {
+//   CreateItem,
+//   CreateOneTimePass,
+//   CreateUser,
+//   FetchAllUsers,
+//   FetchAllItems,
+//   UpdateItem,
+//   FetchAllOrders,
+//   LoginByPass,
+//   PlaceOrder,
+//   Item,
+//   Order,
+//   TokenDto,
+//   User,
+//   MoodConfig,
+//   MoodCoreError,
+//   MoodCoreErrorCodes,
+//   makeItem,
+// };

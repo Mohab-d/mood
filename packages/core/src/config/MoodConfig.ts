@@ -33,7 +33,7 @@ export class MoodConfig {
       return this;
     }
 
-    this._configs = { ...configs };
+    this._configs = structuredClone(configs);
     this._initCalled = true;
     return this;
   }
