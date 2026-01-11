@@ -45,14 +45,17 @@ import type { ItemOption } from "./types/ItemOption.type";
 // utilities
 import { makeItem } from "./utilities/makeItem.utility";
 import { MoodCoreConfigs } from "./constants/MoodCoreConfigs.const";
-import { MoodCoreRolesActions } from "./constants/MoodCoreAction.const";
+import { IAuthorizer } from "./interfaces/IAuthorizer.interface";
 
-function mood() {
+function mood<K extends keyof MoodCoreConfigs>(
+  config: Record<K, MoodCoreConfigs[K]>,
+  authorizer?: IAuthorizer<any>,
+  ns?: IMoodNotificationService,
+) {
   const configs = MoodConfig.getInstance();
+  const exports = {};
 
-  configs.setProperty(MoodCoreConfigs.ROLE_PERMISSION, {
-    ...MoodCoreRolesActions,
-  });
+  exports.createNewUser();
 }
 
 export type {

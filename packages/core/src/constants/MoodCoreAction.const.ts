@@ -1,15 +1,20 @@
-import { User } from "../entities/User.entity";
-
-const MoodCoreActions = {
+export const MoodCoreActions = {
   CREATE_ITEM: "create_item",
   FETCH_ALL_ITEMS: "fetch_all_items",
   UPDATE_ITEM: "update_item",
+
   CREATE_OPTION: "create_option",
   FETCH_OPTION_FOR_ITEM: "fetch_option_for_item",
   UPDATE_OPTION: "update_option",
+
   COMPLETE_ORDER: "complete_order",
   FETCH_ALL_ORDERS: "fetch_all_orders",
   PLACE_ORDER: "place_order",
+
+  CREATE_GUEST_PASS: "create_guess_pass",
+  CREATE_ONE_TIME_PASS: "create_one_time_pass",
+  CREATE_USER: "create_user",
+  LOGIN_BY_PASS: "login_by_pass",
 } as const;
 
 const adminActions = [
@@ -43,16 +48,3 @@ export const MoodCoreRolesActions: Record<string, string[]> = {
   worker: [...guestActions, ...workerAction],
   guest: guestActions,
 };
-
-export class MoodActionAuthorizer {
-  private _rolesActions;
-
-  constructor() {
-    this._rolesActions = { ...MoodCoreRolesActions };
-  }
-
-  public isAuthorized(user: User, action: string) {
-    const userPermissions: string[] = this._rolesActions[user.role.toString()];
-    return userPermissions.includes(action);
-  }
-}

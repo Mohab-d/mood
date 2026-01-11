@@ -39,7 +39,7 @@ export const MoodCoreErrorCodes = {
     },
   },
 
-  // ---- CATEGORY: AUTH: 003
+  // ---- CATEGORY: AUTHENTICATION: 003
   AUTHN: {
     INVALID_TOKEN: {
       code: "001.003.001",
@@ -52,6 +52,26 @@ export const MoodCoreErrorCodes = {
     INSUFFICIENT_MATERIAL: {
       code: "001.004.001",
       message: "Available qty is not sufficient to complete operation",
+    },
+  },
+
+  // ---- CATTEGORY: AUTHORIZATION: 005
+  AUTHZ: {
+    UNAUTHORIZED_ACTION: {
+      code: "001.005.001",
+      message: "Actor is not authorized to perform the requestion action",
+    },
+  },
+
+  // ---- CATEGORY: CONTEXT: 006
+  CONTEXT: {
+    MISSING_DATA: {
+      code: "001.006.001",
+      message: "Required property is missing from the excecution context",
+    },
+    VALUE_ALREADY_SET: {
+      code: "001.006.002",
+      message: "An operation is trying to override a value in the context",
     },
   },
 } as const;

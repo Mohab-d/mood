@@ -25,6 +25,11 @@ export const MoodCoreEvents = {
     FETCH_ALL: "core.order.fetch_all",
     COMPLETE: "core.order.completed",
   },
+
+  AUTHZ: {
+    AUTHORIZE: "core.authz.authorize",
+    REVOKE: "core.authz.revoke",
+  },
 } as const;
 
 type DeepValues<T> = T extends object
