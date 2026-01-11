@@ -4,7 +4,7 @@ import { MoodCoreAction } from "../types/MoodCoreAction.type";
 import { IUnitOfWork } from "./IUnitOfWork.interface";
 
 export interface ContextRegistry {
-  newUserCreateData?: CreateUserDto;
+  newUserCreateData: CreateUserDto;
 }
 
 export type ContextRegistryKey = keyof ContextRegistry;
@@ -13,7 +13,7 @@ export interface IExecutionContext {
   readonly correlationId: string;
   readonly actor: Actor;
   readonly action: MoodCoreAction;
-  readonly uow: IUnitOfWork;
+  readonly uow?: IUnitOfWork;
 
   set<K extends ContextRegistryKey>(
     key: K,

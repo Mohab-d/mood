@@ -15,19 +15,43 @@ export class MoodExcecutionContext implements IExecutionContext {
   readonly correlationId: string;
   readonly actor: Actor;
   readonly action: MoodCoreAction;
-  readonly uow: IUnitOfWork;
   readonly startTime: Date;
+
+  private _uow?: IUnitOfWork;
+
+  get uow(): IUnitOfWork {
+    if (this._uow === undefined) {
+      throw new MoodCoreError(MoodCoreErrorCodes.CONTEXT.MISSING_DATA, {
+        detailedMessage:
+          "An operation is trying to call the uow, but is not provided",
+      });
+    }
+
+    return this._uow;
+  }
+
+  set uow(uow: IUnitOfWork) {
+    if (this._uow !== undefined) {
+      throw new MoodCoreError(MoodCoreErrorCodes.CONTEXT.VALUE_ALREADY_SET, {
+        detailedMessage: "Trying to override the uow property",
+        currentUow: this._uow,
+        providedUow: uow,
+      });
+    }
+
+    this._uow = uow;
+  }
 
   constructor(
     correlationId: string,
     actor: Actor,
     action: MoodCoreAction,
-    uow: IUnitOfWork,
+    uow?: IUnitOfWork,
   ) {
     this.correlationId = correlationId;
     this.actor = actor;
     this.action = action;
-    this.uow = uow;
+    this._uow = uow;
     this.startTime = new Date();
   }
 
@@ -42,6 +66,7 @@ export class MoodExcecutionContext implements IExecutionContext {
         providedValue: value,
       });
     }
+
     this._ctxReg[key] = value;
     return this;
   }
@@ -55,7 +80,7 @@ export class MoodExcecutionContext implements IExecutionContext {
       });
     }
 
-    return this._ctxReg[key];
+    return property;
   }
 
   has<K extends ContextRegistryKey>(key: K): boolean {

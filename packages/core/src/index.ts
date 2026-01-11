@@ -48,14 +48,15 @@ import { MoodCoreConfigs } from "./constants/MoodCoreConfigs.const";
 import { IAuthorizer } from "./interfaces/IAuthorizer.interface";
 
 function mood<K extends keyof MoodCoreConfigs>(
-  config: Record<K, MoodCoreConfigs[K]>,
-  authorizer?: IAuthorizer<any>,
+  config: MoodCoreConfigs,
+  authorizer?: IAuthorizer,
   ns?: IMoodNotificationService,
 ) {
   const configs = MoodConfig.getInstance();
-  const exports = {};
 
-  exports.createNewUser();
+  return {
+    configs,
+  };
 }
 
 export type {
