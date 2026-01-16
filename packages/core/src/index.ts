@@ -46,14 +46,36 @@ import type { ItemOption } from "./types/ItemOption.type";
 import { makeItem } from "./utilities/makeItem.utility";
 import { MoodCoreConfigs } from "./constants/MoodCoreConfigs.const";
 import { IAuthorizer } from "./interfaces/IAuthorizer.interface";
+import { createInflate } from "zlib";
+import { IContextProvider } from "./interfaces/IContextProvider.interface";
 
-function mood(
-  config: MoodCoreConfigs,
-  authorizer?: IAuthorizer,
-  ns?: IMoodNotificationService,
-) {
+function makeFakeNotificationService(): IMoodNotificationService {
+  return {
+    publish: () => {},
+    subscribe: () => {},
+  };
+}
+
+function mood(config: MoodCoreConfigs) {
   const configs = MoodConfig.getInstance();
   configs.init(config);
+
+  const ns =
+    configs.getProperty("notification_service") ??
+    makeFakeNotificationService();
+  const ctx = configs.getProperty("context_provider").getContext();
+  const hasher = configs.getProperty("hasher");
+  const authorizer = configs.getProperty("authorizer");
+
+  async function createUser(): Promise<User> {
+    const createUserService = new CreateUser(ctx.uow, hasher, ns);
+
+    const newUser = await createUserService.execute(
+      ctx.get("newUserCreateData"),
+    );
+
+    return newUser;
+  }
 }
 
 export type {

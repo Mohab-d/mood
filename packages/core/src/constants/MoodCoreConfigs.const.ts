@@ -1,4 +1,12 @@
+import { IAuthorizer } from "../interfaces/IAuthorizer.interface";
+import { IContextProvider } from "../interfaces/IContextProvider.interface";
+import { IHasher } from "../interfaces/IHasher.interface";
+import { IMoodNotificationService } from "../interfaces/IMoodNotificationService.interface";
+
 export interface MoodCoreConfigs {
-  ALLOW_NEGATIVE_STOCK: boolean;
-  SECRETE_KEY: string;
+  allow_negative_stock: boolean;
+  context_provider: IContextProvider;
+  notification_service?: IMoodNotificationService;
+  authorizer?: IAuthorizer;
+  hasher?: IHasher;
 }
