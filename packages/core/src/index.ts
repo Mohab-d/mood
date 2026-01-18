@@ -15,7 +15,6 @@ import { MoodCoreEventType } from "./constants/MoodCoreEvents.const";
 import { MoodCoreErrorCodes } from "./constants/MoodCoreErrorCodes.const";
 
 // repos interfaces
-import type { IHasher } from "./interfaces/IHasher.interface";
 import type { IItemRepo } from "./interfaces/IItemRepo.interface";
 import type { IMoodNotificationService } from "./interfaces/IMoodNotificationService.interface";
 import type { IOrderRepo } from "./interfaces/IOrderRepo.interface";
@@ -48,12 +47,41 @@ import { MoodCoreConfigs } from "./constants/MoodCoreConfigs.const";
 import { IAuthorizer } from "./interfaces/IAuthorizer.interface";
 import { createInflate } from "zlib";
 import { IContextProvider } from "./interfaces/IContextProvider.interface";
+import { IExecutionContext } from "./interfaces/IExecutionContext.interface";
+import { MoodExcecutionContext } from "./context/MoodExcecutionContext.contex";
 
 function makeFakeNotificationService(): IMoodNotificationService {
   return {
     publish: () => {},
     subscribe: () => {},
   };
+}
+
+function makeFakeAuthorizer(): IAuthorizer {
+  return {
+    authorize: async (
+      ctx: IExecutionContext,
+      action: string,
+    ): Promise<void> => {},
+
+    revoke: async (ctx: IExecutionContext, action: string): Promise<void> => {},
+
+    isAuthorized: async (
+      cts: IExecutionContext,
+      action: string,
+    ): Promise<boolean> => {
+      return true;
+    },
+  };
+}
+
+async function createUser(
+  ctx: MoodExcecutionContext,
+  ns: IMoodNotificationService,
+): Promise<User> {
+  const createUserService = new CreateUser(ctx.uow, ns);
+  const newUser = await createUserService.execute(ctx.get("newUserCreateData"));
+  return newUser;
 }
 
 function mood(config: MoodCoreConfigs) {
@@ -63,26 +91,17 @@ function mood(config: MoodCoreConfigs) {
   const ns =
     configs.getProperty("notification_service") ??
     makeFakeNotificationService();
-  const ctx = configs.getProperty("context_provider").getContext();
-  const hasher = configs.getProperty("hasher");
-  const authorizer = configs.getProperty("authorizer");
+  const authorizer = configs.getProperty("authorizer") ?? makeFakeAuthorizer();
 
-  async function createUser(): Promise<User> {
-    const createUserService = new CreateUser(ctx.uow, hasher, ns);
-
-    const newUser = await createUserService.execute(
-      ctx.get("newUserCreateData"),
-    );
-
-    return newUser;
-  }
+  return {
+    createUser: (ctx: IExecutionContext) => createUser(ctx, ns),
+  };
 }
 
 export type {
   CreateItemDto,
   CreateOrderDto,
   CreateUserDto,
-  IHasher,
   IItemRepo,
   IMoodNotificationService,
   IOrderRepo,
